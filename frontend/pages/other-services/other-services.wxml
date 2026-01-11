@@ -1,0 +1,156 @@
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">其他服务</text>
+    <text class="subtitle">多种便捷服务，满足您的需求</text>
+  </view>
+
+  <!-- 服务说明 -->
+  <view class="notice-section">
+    <view class="notice-item">
+      <text class="notice-icon">💧</text>
+      <text class="notice-text">送水到寝，直接送到宿舍门口</text>
+    </view>
+    <view class="notice-item">
+      <text class="notice-icon">👕</text>
+      <text class="notice-text">洗衣洗鞋，专业清洗服务</text>
+    </view>
+    <view class="notice-item">
+      <text class="notice-icon">📄</text>
+      <text class="notice-text">打印资料，支持各种格式</text>
+    </view>
+    <view class="notice-item">
+      <text class="notice-icon">✍️</text>
+      <text class="notice-text">代写服务，专业文案撰写</text>
+    </view>
+    <view class="notice-item">
+      <text class="notice-icon">🔧</text>
+      <text class="notice-text">万能任务，其他个性化需求</text>
+    </view>
+  </view>
+
+  <!-- 服务选择 -->
+  <view class="service-section">
+    <view class="section-header">
+      <text class="section-title">选择服务类型</text>
+    </view>
+
+    <view class="service-grid">
+      <block wx:for="{{services}}" wx:key="id">
+        <view 
+          class="service-item {{currentService === item.id ? 'active' : ''}}" 
+          data-service="{{item}}" 
+          bindtap="selectService"
+        >
+          <view class="service-icon {{item.bgClass}}">
+            <text class="service-emoji">{{item.emoji}}</text>
+          </view>
+          <text class="service-name">{{item.name}}</text>
+          <text class="service-price">{{item.price}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 服务表单 -->
+  <view class="form-section" wx:if="{{currentService}}">
+    <view class="form-header">
+      <text class="form-title">{{selectedService.name}} - 订单信息</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label required">服务要求</text>
+      <textarea 
+        class="textarea" 
+        placeholder="请详细描述您的需求，例如：送水到XX宿舍XX号，打印XX资料XX页，清洗XX衣物等" 
+        value="{{formData.requirements}}" 
+        bindinput="onRequirementsInput" 
+        maxlength="500"
+      ></textarea>
+      <text class="word-count">{{formData.requirements ? formData.requirements.length : 0}}/500</text>
+    </view>
+
+    <view class="form-item">
+      <text class="label required">送达地址</text>
+      <input 
+        class="input" 
+        placeholder="请输入详细地址，如：XX宿舍XX号" 
+        value="{{formData.address}}" 
+        bindinput="onAddressInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">联系电话</text>
+      <input 
+        class="input" 
+        type="number" 
+        placeholder="请输入您的手机号码" 
+        value="{{formData.phone}}" 
+        bindinput="onPhoneInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">期望完成时间</text>
+      <picker 
+        mode="time" 
+        value="{{formData.expectedTime}}" 
+        bindchange="onTimeChange"
+      >
+        <view class="picker-view">{{formData.expectedTime || '选择期望完成时间（选填）'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">特殊说明</text>
+      <textarea 
+        class="textarea" 
+        placeholder="其他需要说明的事项（选填）" 
+        value="{{formData.remarks}}" 
+        bindinput="onRemarksInput" 
+        maxlength="200"
+      ></textarea>
+      <text class="word-count">{{formData.remarks ? formData.remarks.length : 0}}/200</text>
+    </view>
+  </view>
+
+  <!-- 价格说明 -->
+  <view class="price-section">
+    <view class="price-header">
+      <text class="price-title">价格说明</text>
+    </view>
+    <view class="price-list">
+      <view class="price-item">
+        <text class="price-name">送水到寝</text>
+        <text class="price-value">3元/桶</text>
+      </view>
+      <view class="price-item">
+        <text class="price-name">洗衣服务</text>
+        <text class="price-value">8-15元/件</text>
+      </view>
+      <view class="price-item">
+        <text class="price-name">洗鞋服务</text>
+        <text class="price-value">10-20元/双</text>
+      </view>
+      <view class="price-item">
+        <text class="price-name">打印资料</text>
+        <text class="price-value">0.5元/页</text>
+      </view>
+      <view class="price-item">
+        <text class="price-name">代写服务</text>
+        <text class="price-value">按难度定价</text>
+      </view>
+      <view class="price-item">
+        <text class="price-name">万能任务</text>
+        <text class="price-value">双方协商</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <button class="btn-contact" bindtap="contactCustomerService">联系客服咨询</button>
+    <button class="btn-submit" bindtap="submitOrder" disabled="{{!isFormValid}}">提交订单</button>
+  </view>
+</view>

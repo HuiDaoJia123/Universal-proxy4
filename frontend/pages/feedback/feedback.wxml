@@ -1,0 +1,139 @@
+<!-- pages/feedback/feedback.wxml -->
+<view class="feedback-container">
+  <!-- 顶部导航 -->
+  <view class="feedback-header">
+    <view class="nav-back" bindtap="navigateBack">
+      <image class="back-icon" src="/assets/icons/back-arrow.png"></image>
+    </view>
+    <text class="header-title">意见反馈</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <!-- 反馈表单 -->
+  <scroll-view class="feedback-form" scroll-y>
+    <!-- 问题类型 -->
+    <view class="form-section">
+      <view class="section-title">问题类型</view>
+      <view class="type-selector">
+        <view 
+          class="type-item {{feedbackData.type === item.value ? 'selected' : ''}}"
+          wx:for="{{feedbackTypes}}"
+          wx:key="value"
+          data-type="{{item.value}}"
+          bindtap="selectType"
+        >
+          <image class="type-icon" src="{{item.icon}}"></image>
+          <text class="type-text">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 问题描述 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">问题描述</text>
+        <text class="word-count">{{feedbackData.content.length}}/500</text>
+      </view>
+      <textarea 
+        class="content-input" 
+        placeholder="请详细描述您遇到的问题或建议..."
+        value="{{feedbackData.content}}"
+        bindinput="onContentInput"
+        maxlength="500"
+      ></textarea>
+    </view>
+
+    <!-- 截图上传 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">相关截图</text>
+        <text class="section-desc">最多上传3张图片（选填）</text>
+      </view>
+      <view class="upload-container">
+        <view class="image-list">
+          <block wx:for="{{feedbackData.images}}" wx:key="index">
+            <view class="image-item">
+              <image class="uploaded-image" src="{{item}}" mode="aspectFill"></image>
+              <view class="image-remove" bindtap="removeImage" data-index="{{index}}">
+                <image class="remove-icon" src="/assets/icons/close-circle.png"></image>
+              </view>
+            </view>
+          </block>
+          
+          <view 
+            class="upload-btn {{feedbackData.images.length >= 3 ? 'disabled' : ''}}"
+            bindtap="chooseImage"
+            wx:if="{{feedbackData.images.length < 3}}"
+          >
+            <image class="upload-icon" src="/assets/icons/camera-add.png"></image>
+            <text class="upload-text">添加图片</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="form-section">
+      <view class="section-title">联系方式</view>
+      <text class="contact-desc">选填，方便我们与您联系解决问题</text>
+      
+      <view class="contact-inputs">
+        <view class="contact-item">
+          <image class="contact-icon" src="/assets/icons/phone.png"></image>
+          <input 
+            class="contact-input" 
+            type="number" 
+            placeholder="请输入手机号码"
+            value="{{feedbackData.contact.phone}}"
+            bindinput="onPhoneInput"
+            maxlength="11"
+          />
+        </view>
+        
+        <view class="contact-item">
+          <image class="contact-icon" src="/assets/icons/email.png"></image>
+          <input 
+            class="contact-input" 
+            type="text" 
+            placeholder="请输入邮箱地址"
+            value="{{feedbackData.contact.email}}"
+            bindinput="onEmailInput"
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <button 
+        class="submit-btn {{canSubmit ? 'active' : ''}}" 
+        bindtap="submitFeedback"
+        disabled="{{!canSubmit}}"
+      >
+        {{isSubmitting ? '提交中...' : '提交反馈'}}
+      </button>
+    </view>
+  </scroll-view>
+
+  <!-- 提交成功弹窗 -->
+  <view class="success-modal {{showSuccessModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="hideSuccessModal"></view>
+    <view class="modal-content">
+      <image class="success-icon" src="/assets/icons/feedback-success.png"></image>
+      <text class="modal-title">反馈提交成功</text>
+      <text class="modal-desc">感谢您的反馈，我们会在3个工作日内处理</text>
+      
+      <view class="modal-actions">
+        <button class="modal-btn secondary" bindtap="hideSuccessModal">继续反馈</button>
+        <button class="modal-btn primary" bindtap="navigateBack">返回首页</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 反馈历史入口 -->
+  <view class="history-entry" bindtap="navigateToHistory">
+    <image class="history-icon" src="/assets/icons/history.png"></image>
+    <text class="history-text">查看反馈记录</text>
+    <image class="arrow-icon" src="/assets/icons/arrow-right.png"></image>
+  </view>
+</view>

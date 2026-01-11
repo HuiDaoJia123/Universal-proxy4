@@ -1,0 +1,109 @@
+<!--pages/my/my.wxml-->
+<view class="container">
+  <!-- 登录区域 -->
+  <view class="login-section" wx:if="{{!isLoggedIn}}">
+    <view class="login-bg"></view>
+    <view class="login-content">
+      <view class="login-header">
+        <image class="login-logo" src="/images/default-avatar.png"></image>
+        <text class="login-title">欢迎来到校园生活助手</text>
+        <text class="login-subtitle">登录享受更多服务</text>
+      </view>
+      <view class="login-actions">
+        <button class="login-btn" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
+          <text class="btn-icon">📱</text>
+          <text class="btn-text">微信一键登录</text>
+        </button>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 用户信息区域 -->
+  <view class="user-section" wx:else>
+    <!-- 用户头部 -->
+    <view class="user-header">
+      <view class="user-avatar-wrapper">
+        <image class="user-avatar" src="{{userInfo.avatar_url || userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="verified-badge" wx:if="{{userInfo.is_verified}}">
+          <text class="verified-icon">✓</text>
+        </view>
+      </view>
+      <view class="user-info">
+        <view class="user-name-row">
+          <text class="user-name">{{userInfo.nickname || userInfo.real_name || '用户'}}</text>
+          <view class="user-level" wx:if="{{userInfo.credit_score >= 100}}">
+            <text class="level-text">信用优良</text>
+          </view>
+        </view>
+        <text class="user-phone">{{userInfo.phone || '未绑定手机号'}}</text>
+      </view>
+      <view class="edit-btn" bindtap="editProfile">
+        <image class="edit-icon" src="/images/icon-edit.png"></image>
+      </view>
+    </view>
+ 
+    <!-- 统计数据 -->
+    <view class="stats-card">
+      <view class="stats-item">
+        <text class="stats-value">{{stats.orderCount}}</text>
+        <text class="stats-label">全部订单</text>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <text class="stats-value">¥{{wallet.balance}}</text>
+        <text class="stats-label">账户余额</text>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <text class="stats-value">{{userInfo.credit_score || 100}}</text>
+        <text class="stats-label">信用分</text>
+      </view>
+    </view>
+ 
+    <!-- 功能菜单 -->
+    <view class="menu-card">
+      <block wx:for="{{menuList}}" wx:key="id">
+        <view class="menu-item" data-item="{{item}}" bindtap="onMenuTap">
+          <view class="menu-left">
+            <image class="menu-icon" src="{{item.icon}}" mode="aspectFit"></image>
+            <view class="menu-text-wrapper">
+              <text class="menu-title">{{item.title}}</text>
+              <text class="menu-subtitle">{{item.subtitle}}</text>
+            </view>
+          </view>
+          <view class="menu-right">
+            <view class="badge" wx:if="{{item.id === 1 && stats.orderCount > 0}}">
+              <text class="badge-text">{{stats.orderCount}}</text>
+            </view>
+            <image class="menu-arrow" src="/images/arrow-right.png"></image>
+          </view>
+        </view>
+      </block>
+    </view>
+ 
+    <!-- 实名认证提示 -->
+    <view class="verify-card" wx:if="{{!userInfo.is_verified}}" bindtap="navigateToVerify">
+      <view class="verify-left">
+        <image class="verify-icon" src="/images/icon-verify.png"></image>
+        <view class="verify-info">
+          <text class="verify-title">完成实名认证</text>
+          <text class="verify-desc">认证后享受更多服务特权</text>
+        </view>
+      </view>
+      <view class="verify-btn">
+        <text class="verify-btn-text">去认证</text>
+      </view>
+    </view>
+ 
+    <!-- 退出登录 -->
+    <view class="logout-card">
+      <button class="logout-btn" bindtap="logout">退出登录</button>
+    </view>
+ 
+    <!-- 客服入口 -->
+    <view class="service-card" bindtap="contactService">
+      <image class="service-icon" src="/images/customer-service-avatar.png"></image>
+      <text class="service-text">联系客服</text>
+    </view>
+  </view>
+</view>

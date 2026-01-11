@@ -1,0 +1,198 @@
+.container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 140rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.address-list {
+  padding: 30rpx;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.address-item {
+  background: white;
+  border-radius: 16rpx;
+  padding: 0; /* 移除内边距，由子元素控制 */
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.08);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 确保圆角效果 */
+}
+
+.address-item.active {
+  border: 2rpx solid #1E90FF;
+  background: #f0f8ff;
+}
+
+/* 地址信息上半区域 - 可点击 */
+.address-top {
+  padding: 30rpx 30rpx 20rpx 30rpx; /* 上右下左 */
+  flex: 1;
+  cursor: pointer; /* 表明可点击 */
+}
+
+.address-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.recipient {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 24rpx;
+}
+
+.phone {
+  font-size: 30rpx;
+  color: #666;
+  margin-right: 20rpx;
+}
+
+.default-tag {
+  background: #1E90FF;
+  color: white;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.address-content {
+  margin-bottom: 0;
+}
+
+.address-text {
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 操作按钮下半区域 - 整体不可点击，但按钮除外 */
+.address-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  width: 100%;
+  background: #fafafa; /* 轻微背景色区分 */
+  pointer-events: none; /* 使整个下半区域不可点击 */
+}
+
+.left-actions {
+  display: flex;
+  align-items: center;
+  pointer-events: auto; /* 使默认地址设置可点击 */
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #666;
+  white-space: nowrap;
+}
+
+.address-radio {
+  transform: scale(0.8);
+  margin-right: 8rpx;
+}
+
+.radio-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.right-actions {
+  display: flex;
+  flex-shrink: 0;
+  pointer-events: auto; /* 使删除按钮可点击 */
+}
+
+/* 删除按钮 - 恢复原先大小 */
+.btn-delete {
+  padding: 8rpx 16rpx;
+  font-size: 24rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #ff0000;
+  background: white;
+  min-width: 60rpx;
+  height: 40rpx;
+  line-height: 24rpx;
+  white-space: nowrap;
+  color: #ff4d4f;
+  pointer-events: auto; /* 确保按钮可点击 */
+}
+
+.empty-state {
+  text-align: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  display: block;
+  margin: 0 auto 40rpx;
+}
+
+.empty-text {
+  display: block;
+  font-size: 32rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+.empty-desc {
+  font-size: 28rpx;
+  color: #ccc;
+}
+
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  box-sizing: border-box;
+}
+
+.btn-add {
+  background: #1E90FF;
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  width: 100%;
+  font-weight: bold;
+}
+
+.confirm-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+  box-sizing: border-box;
+}
+
+.btn-confirm {
+  background: #1E90FF;
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  width: 100%;
+  font-weight: bold;
+}

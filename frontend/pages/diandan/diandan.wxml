@@ -1,0 +1,247 @@
+<!--pages/diandan/diandan.wxml-->
+<view class="container">
+  <!-- 订单类型切换 - 三个标签页 -->
+  <view class="order-type-tabs">
+    <view class="tab {{currentTab === 'my' ? 'active' : ''}}" data-tab="my" bindtap="switchTab">
+      <text>我的订单</text>
+    </view>
+    <view class="tab {{currentTab === 'school' ? 'active' : ''}}" data-tab="school" bindtap="switchTab">
+      <text>学校订单</text>
+    </view>
+    <view class="tab {{currentTab === 'accepted' ? 'active' : ''}}" data-tab="accepted" bindtap="switchTab">
+      <text>接单订单</text>
+    </view>
+  </view>
+
+  <!-- 学校订单的筛选和排序区域 -->
+  <view class="filter-section" wx:if="{{currentTab === 'school'}}">
+    <!-- 服务类型筛选 -->
+    <view class="service-filter">
+  <text class="filter-title">服务类型:</text>
+  <scroll-view class="filter-scroll" scroll-x scroll-with-animation>
+    <view class="filter-tags">
+      <block wx:for="{{serviceFilters}}" wx:key="value">
+        <view 
+          class="filter-tag {{currentFilter === item.value ? 'active' : ''}}" 
+          data-filter="{{item.value}}" 
+          bindtap="changeFilter"
+        >
+          {{item.name}}
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</view>
+
+    <!-- 排序和搜索 -->
+    <view class="sort-search-section">
+      <!-- 排序方式 -->
+      <view class="sort-options">
+        <text class="sort-title">排序:</text>
+        <view 
+          class="sort-option {{currentSort === 'time' ? 'active' : ''}}" 
+          data-sort="time" 
+          bindtap="changeSort"
+        >
+          时间
+        </view>
+        <view 
+          class="sort-option {{currentSort === 'price' ? 'active' : ''}}" 
+          data-sort="price" 
+          bindtap="changeSort"
+        >
+          价格
+        </view>
+      </view>
+
+      <!-- 日期搜索 -->
+      <view class="date-search">
+        <input 
+          class="date-input" 
+          type="date" 
+          value="{{searchDate}}" 
+          bindinput="onDateInput"
+          placeholder="选择日期"
+        />
+        <button class="btn-today" bindtap="searchTodayOrders">今天</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 其他订单页面的状态筛选 -->
+  <view class="status-filter" wx:if="{{currentTab !== 'school'}}">
+    <view class="filter-tabs">
+      <view class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="changeFilter">
+        全部
+      </view>
+      <view class="filter-tab {{currentFilter === 'pending' ? 'active' : ''}}" data-filter="pending" bindtap="changeFilter">
+        待接单
+      </view>
+      <view class="filter-tab {{currentFilter === 'accepted' ? 'active' : ''}}" data-filter="accepted" bindtap="changeFilter">
+        进行中
+      </view>
+      <view class="filter-tab {{currentFilter === 'completed' ? 'active' : ''}}" data-filter="completed" bindtap="changeFilter">
+        已完成
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的订单列表 -->
+  <view class="order-list" wx:if="{{currentTab === 'my'}}">
+    <block wx:for="{{filteredMyOrders}}" wx:key="id">
+      <view class="order-item">
+        <view class="order-header">
+          <text class="order-id">订单号: {{item.orderNo}}</text>
+          <view class="order-status-info">
+            <text class="order-status {{item.status}}">{{getStatusText(item.status)}}</text>
+            <text class="pay-status {{item.payStatus}}">{{getPayStatusText(item.payStatus)}}</text>
+          </view>
+        </view>
+        
+        <view class="order-content">
+          <view class="service-info">
+            <text class="service-name">{{item.serviceName}}</text>
+            <text class="order-time">{{item.createTime}}</text>
+            <!-- 倒计时显示 -->
+            <view class="countdown-section" wx:if="{{item.status === 'pending' || item.status === 'accepted'}}">
+              <text class="countdown-label">剩余时间:</text>
+              <text class="countdown-time">{{formatCountdown(item.countdown)}}</text>
+            </view>
+          </view>
+          <view class="order-price">
+            <text class="price">¥{{item.price}}</text>
+          </view>
+        </view>
+
+        <view class="order-footer">
+          <text class="order-address">{{item.address}}</text>
+          <view class="order-actions">
+            <!-- 我的订单操作按钮 -->
+            <block wx:if="{{item.status === 'pending'}}">
+              <button class="btn btn-cancel" bindtap="cancelOrder" data-id="{{item.id}}">取消订单</button>
+              <button class="btn btn-chat" bindtap="startChat" data-order="{{item}}">联系客服</button>
+            </block>
+            <block wx:if="{{item.status === 'accepted'}}">
+              <button class="btn btn-chat" bindtap="startChat" data-order="{{item}}">联系{{item.acceptorName || '服务方'}}</button>
+              <button class="btn btn-complete" bindtap="confirmComplete" data-id="{{item.id}}">确认完成</button>
+            </block>
+            <block wx:if="{{item.status === 'completed'}}">
+              <button class="btn btn-comment" bindtap="rateOrder" data-id="{{item.id}}">评价</button>
+              <button class="btn btn-again" bindtap="orderAgain" data-order="{{item}}">再次下单</button>
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{filteredMyOrders.length === 0}}" class="empty-state">
+      <icon class="empty-icon" type="warn" size="100" color="#ccc"></icon>
+      <text class="empty-text">暂无订单</text>
+      <button class="btn btn-primary" bindtap="goToIndex">去下单</button>
+    </view>
+  </view>
+
+  <!-- 学校订单列表 -->
+  <view class="order-list" wx:if="{{currentTab === 'school'}}">
+    <block wx:for="{{filteredSchoolOrders}}" wx:key="id">
+      <view class="order-item">
+        <view class="order-header">
+          <text class="order-id">订单号: {{item.orderNo}}</text>
+          <view class="order-status-info">
+            <text class="order-status {{item.status}}">{{getStatusText(item.status)}}</text>
+            <text class="pay-status {{item.payStatus}}">{{getPayStatusText(item.payStatus)}}</text>
+          </view>
+        </view>
+        
+        <view class="order-content">
+          <view class="service-info">
+            <text class="service-name">{{item.serviceName}}</text>
+            <text class="order-time">{{item.createTime}}</text>
+            <!-- 抢单倒计时 -->
+            <view class="countdown-section">
+              <text class="countdown-label">抢单剩余:</text>
+              <text class="countdown-time">{{formatCountdown(item.countdown)}}</text>
+            </view>
+          </view>
+          <view class="order-price">
+            <text class="price">¥{{item.price}}</text>
+          </view>
+        </view>
+
+        <view class="order-footer">
+          <text class="order-address" wx:if="{{item.address}}">{{item.address}}</text>
+          <text class="order-course" wx:if="{{item.courseName}}">科目: {{item.courseName}}</text>
+          <text class="pickup-time" wx:if="{{item.pickupTime}}">要求时间: {{item.pickupTime}}</text>
+          <view class="order-actions">
+            <!-- 学校订单操作按钮（骑手可见） -->
+            <button class="btn btn-grab" bindtap="grabOrder" data-order="{{item}}">立即抢单</button>
+            <button class="btn btn-detail" bindtap="viewOrderDetail" data-order="{{item}}">查看详情</button>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{filteredSchoolOrders.length === 0}}" class="empty-state">
+      <icon class="empty-icon" type="warn" size="100" color="#ccc"></icon>
+      <text class="empty-text">暂无可抢订单</text>
+    </view>
+  </view>
+
+  <!-- 接单订单列表 -->
+  <view class="order-list" wx:if="{{currentTab === 'accepted'}}">
+    <block wx:for="{{filteredAcceptedOrders}}" wx:key="id">
+      <view class="order-item">
+        <view class="order-header">
+          <text class="order-id">订单号: {{item.orderNo}}</text>
+          <view class="order-status-info">
+            <text class="order-status {{item.status}}">{{getStatusText(item.status)}}</text>
+            <text class="pay-status {{item.payStatus}}">{{getPayStatusText(item.payStatus)}}</text>
+          </view>
+        </view>
+        
+        <view class="order-content">
+          <view class="service-info">
+            <text class="service-name">{{item.serviceName}}</text>
+            <text class="order-time">{{item.createTime}}</text>
+            <!-- 处理倒计时 -->
+            <view class="countdown-section" wx:if="{{item.status === 'accepted' || item.status === 'in_progress'}}">
+              <text class="countdown-label">处理剩余:</text>
+              <text class="countdown-time">{{formatCountdown(item.countdown)}}</text>
+            </view>
+          </view>
+          <view class="order-price">
+            <text class="price">¥{{item.price}}</text>
+          </view>
+        </view>
+
+        <view class="order-footer">
+          <text class="order-address" wx:if="{{item.address}}">{{item.address}}</text>
+          <text class="order-course" wx:if="{{item.courseName}}">科目: {{item.courseName}}</text>
+          <text class="pickup-time" wx:if="{{item.pickupTime}}">要求时间: {{item.pickupTime}}</text>
+          <view class="order-actions">
+            <!-- 接单订单操作按钮 -->
+            <block wx:if="{{item.status === 'accepted'}}">
+              <button class="btn btn-chat" bindtap="startChat" data-order="{{item}}">联系用户</button>
+              <button class="btn btn-progress" bindtap="startProgress" data-id="{{item.id}}">开始处理</button>
+            </block>
+            <block wx:if="{{item.status === 'in_progress'}}">
+              <button class="btn btn-chat" bindtap="startChat" data-order="{{item}}">联系用户</button>
+              <button class="btn btn-complete" bindtap="confirmComplete" data-id="{{item.id}}">确认完成</button>
+            </block>
+            <block wx:if="{{item.status === 'completed'}}">
+              <button class="btn btn-detail" bindtap="viewOrderDetail" data-order="{{item}}">查看详情</button>
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{filteredAcceptedOrders.length === 0}}" class="empty-state">
+      <icon class="empty-icon" type="warn" size="100" color="#ccc"></icon>
+      <text class="empty-text">暂无接单订单</text>
+    </view>
+  </view>
+</view>

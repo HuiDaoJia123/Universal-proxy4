@@ -1,0 +1,250 @@
+/* 页面整体样式 */
+.page-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 导航栏样式 */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 32rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+.nav-back {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+.nav-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.nav-empty {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+/* 表单滚动区域 */
+.form-scroll {
+  flex: 1;
+  padding: 24rpx 32rpx;
+}
+
+/* 表单区块样式 */
+.form-section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 28rpx;
+  border-left: 8rpx solid #1890ff;
+  padding-left: 20rpx;
+}
+
+/* 表单项样式 */
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.form-item:last-child {
+  border-bottom: none;
+}
+.item-label {
+  width: 140rpx;
+  font-weight: 500;
+  color: #333;
+}
+.item-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+.item-input::placeholder {
+  color: #ccc;
+}
+
+/* 性别选择样式 */
+.gender-group {
+  display: flex;
+  gap: 32rpx;
+  margin-left: 20rpx;
+}
+.gender-btn {
+  padding: 16rpx 48rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 36rpx;
+  transition: all 0.2s;
+}
+.gender-btn.active {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+.gender-text {
+  font-size: 28rpx;
+  color: #666;
+}
+.gender-btn.active .gender-text {
+  color: #fff;
+}
+
+/* 选择器输入框样式 */
+.picker-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.picker-value {
+  font-size: 28rpx;
+  color: #333;
+}
+.picker-value.placeholder {
+  color: #ccc;
+}
+.picker-arrow {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+/* 个人简介样式 */
+.bio-input {
+  width: 100%;
+  height: 200rpx;
+  background-color: #fafafa;
+  border: 1rpx solid #eee;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  line-height: 1.6;
+  resize: none;
+}
+.bio-input::placeholder {
+  color: #ccc;
+}
+.bio-counter {
+  display: block;
+  text-align: right;
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 保存按钮样式 */
+.save-btn-container {
+  padding: 0 32rpx 40rpx;
+}
+.save-btn {
+  width: 100%;
+  height: 92rpx;
+  border-radius: 46rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+}
+.save-btn.disable {
+  background-color: #e0e0e0;
+  color: #fff;
+}
+.save-btn.enable {
+  background-color: #1890ff;
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(24, 144, 255, 0.3);
+}
+.save-btn.enable::after {
+  border: none;
+}
+
+/* 选择器遮罩样式 */
+.picker-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+/* 选择器面板样式 */
+.picker-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  z-index: 999;
+  max-height: 70vh;
+}
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.picker-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.picker-close {
+  font-size: 28rpx;
+  color: #1890ff;
+  font-weight: 500;
+}
+.picker-list {
+  max-height: calc(70vh - 100rpx);
+}
+.picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.picker-item:last-child {
+  border-bottom: none;
+}
+.picker-item.selected {
+  background-color: #f0f8ff;
+}
+.item-text {
+  font-size: 28rpx;
+  color: #1a1a1a;
+  flex: 1;
+  line-height: 1.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.selected-icon {
+  color: #1890ff;
+  font-size: 32rpx;
+  font-weight: bold;
+}

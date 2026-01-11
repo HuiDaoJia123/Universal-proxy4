@@ -1,0 +1,9 @@
+<!--pages/agreement/agreement.wxml-->
+<view class="page-container">
+  <view class="agreement-content">
+    <view class="section" wx:for="{{content}}" wx:key="index">
+      <text class="section-title">{{item.title}}</text>
+      <text class="section-text">{{item.text}}</text>
+    </view>
+  </view>
+</view>

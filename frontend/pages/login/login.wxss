@@ -1,0 +1,157 @@
+/* pages/login/login.wxss */
+.container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 30rpx;
+}
+
+/* 顶部区域 */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 100rpx;
+  margin-top: 60rpx;
+}
+
+.logo {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 24rpx;
+  margin-bottom: 30rpx;
+}
+
+.welcome-title {
+  display: block;
+  font-size: 42rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.welcome-subtitle {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 登录方式 */
+.login-methods {
+  width: 100%;
+  margin-bottom: 80rpx;
+}
+
+.method-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.method-list {
+  background-color: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.method-item {
+  display: flex;
+  align-items: center;
+  padding: 40rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.method-item:last-child {
+  border-bottom: none;
+}
+
+.method-item:active {
+  background-color: #f9f9f9;
+}
+
+.method-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 25rpx;
+}
+
+.method-name {
+  flex: 1;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.method-arrow {
+  color: #ccc;
+}
+
+/* 协议说明 */
+.agreement-section {
+  position: fixed;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.agreement-link {
+  color: #1E90FF;
+}
+
+/* 添加button样式覆盖 */
+.method-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: inherit;
+}
+ 
+.method-button::after {
+  border: none;
+}
+ 
+.method-button:disabled {
+  opacity: 0.6;
+}
+
+/* 确保按钮样式正确 */
+.method-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 32rpx;
+  color: #333;
+  text-align: left;
+  line-height: normal;
+}
+ 
+.method-button::after {
+  border: none;
+}
+ 
+.method-button:active {
+  opacity: 0.6;
+}
+ 
+.method-button:disabled {
+  opacity: 0.5;
+  background: transparent !important;
+  color: #999 !important;
+}

@@ -1,0 +1,98 @@
+<!--pages/wallet/wallet.wxml-->
+<view class="container">
+  <!-- 钱包概览 -->
+  <view class="wallet-overview">
+    <view class="balance-section">
+      <text class="balance-label">可用余额（元）</text>
+      <text class="balance-amount">{{walletInfo.balance.toFixed(2)}}</text>
+    </view>
+    
+    <view class="stats-section">
+      <view class="stat-item">
+        <text class="stat-value">¥{{walletInfo.todayIncome.toFixed(2)}}</text>
+        <text class="stat-label">今日收入</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">¥{{walletInfo.totalIncome.toFixed(2)}}</text>
+        <text class="stat-label">累计收入</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">¥{{walletInfo.frozenAmount.toFixed(2)}}</text>
+        <text class="stat-label">冻结金额</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn-withdraw" bindtap="showWithdrawDialog">提现</button>
+    <button class="btn-cards" bindtap="manageBankCards">银行卡</button>
+  </view>
+
+  <!-- 交易记录 -->
+  <view class="transaction-section">
+    <view class="section-header">
+      <text class="section-title">交易记录</text>
+    </view>
+    
+    <view class="transaction-list">
+      <block wx:for="{{transactions}}" wx:key="id">
+        <view class="transaction-item" data-transaction="{{item}}" bindtap="viewTransactionDetail">
+          <view class="transaction-left">
+            <text class="transaction-title">{{item.title}}</text>
+            <text class="transaction-time">{{item.time}}</text>
+          </view>
+          <view class="transaction-right">
+            <text class="transaction-amount {{item.type}}">
+              {{item.type === 'income' ? '+' : '-'}}¥{{item.amount.toFixed(2)}}
+            </text>
+            <text class="transaction-status {{item.status}}">{{getStatusText(item.status)}}</text>
+          </view>
+        </view>
+      </block>
+      
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{transactions.length === 0}}">
+        <icon class="empty-icon" type="warn" size="100" color="#ccc"></icon>
+        <text class="empty-text">暂无交易记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提现弹窗 -->
+  <view class="withdraw-dialog {{showWithdraw ? 'show' : ''}}">
+    <view class="dialog-mask" bindtap="hideWithdrawDialog"></view>
+    <view class="dialog-content">
+      <view class="dialog-header">
+        <text class="dialog-title">提现</text>
+        <icon class="dialog-close" type="clear" size="20" bindtap="hideWithdrawDialog"></icon>
+      </view>
+      
+      <view class="withdraw-form">
+        <view class="form-item">
+          <text class="form-label">提现金额</text>
+          <view class="amount-input">
+            <text class="currency-symbol">¥</text>
+            <input 
+              class="amount-field" 
+              type="digit" 
+              placeholder="0.00" 
+              value="{{withdrawAmount}}" 
+              bindinput="onWithdrawAmountInput"
+            />
+            <text class="all-withdraw" bindtap="withdrawAll">全部提现</text>
+          </view>
+          <text class="balance-hint">可用余额 ¥{{walletInfo.balance.toFixed(2)}}</text>
+        </view>
+        
+        <view class="withdraw-rules">
+          <text class="rule-item">• 最低提现金额10元</text>
+          <text class="rule-item">• 提现将在1-3个工作日内到账</text>
+          <text class="rule-item">• 单笔提现最高5000元</text>
+        </view>
+        
+        <button class="btn-confirm" bindtap="confirmWithdraw">确认提现</button>
+      </view>
+    </view>
+  </view>
+</view>

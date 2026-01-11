@@ -1,0 +1,6 @@
+<!--pages/apply-substitute/apply-substitute.wxml-->
+<view class="container">
+  <view class="loading">
+    <text>正在跳转到申请页面...</text>
+  </view>
+</view>

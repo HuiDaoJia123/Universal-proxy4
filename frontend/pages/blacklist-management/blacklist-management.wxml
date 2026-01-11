@@ -1,0 +1,108 @@
+<!--pages/blacklist-management/blacklist-management.wxml-->
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">黑名单管理</text>
+    <text class="subtitle">管理您的黑名单用户</text>
+  </view>
+ 
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <icon class="search-icon" type="search" size="16"></icon>
+      <input class="search-input" 
+             placeholder="搜索用户名或手机号" 
+             value="{{searchKeyword}}" 
+             bindinput="onSearchInput" />
+      <text class="clear-search" wx:if="{{searchKeyword}}" bindtap="clearSearch">清除</text>
+    </view>
+  </view>
+ 
+  <!-- 黑名单列表 -->
+  <view class="blacklist-section">
+    <view class="section-header">
+      <text class="section-title">黑名单用户 ({{blacklist.length}})</text>
+      <text class="add-btn" bindtap="showAddModal">+ 添加</text>
+    </view>
+ 
+    <!-- 黑名单用户列表 -->
+    <view class="blacklist-list" wx:if="{{blacklist.length > 0}}">
+      <view class="blacklist-item" 
+            wx:for="{{blacklist}}" 
+            wx:key="id"
+            bindlongpress="showRemoveConfirm" 
+            data-id="{{item.id}}">
+        <view class="user-info">
+          <view class="user-avatar">
+            <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill"></image>
+            <text wx:else class="default-avatar">{{item.username.charAt(0)}}</text>
+          </view>
+          <view class="user-details">
+            <text class="username">{{item.username}}</text>
+            <text class="user-phone">{{item.phone}}</text>
+            <text class="block-reason">拉黑原因：{{item.reason}}</text>
+            <text class="block-time">拉黑时间：{{item.created_at}}</text>
+          </view>
+        </view>
+        <view class="action-btns">
+          <button class="remove-btn" size="mini" bindtap="showRemoveConfirm" data-id="{{item.id}}">移除</button>
+        </view>
+      </view>
+    </view>
+ 
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <image class="empty-icon" src="/images/icon-block.png"></image>
+      <text class="empty-text">暂无黑名单用户</text>
+      <text class="empty-desc">添加到黑名单的用户将看不到您的订单</text>
+    </view>
+  </view>
+ 
+  <!-- 添加黑名单弹窗 -->
+  <view class="modal-mask" wx:if="{{showAddModal}}" bindtap="hideAddModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">添加黑名单</text>
+        <text class="close-btn" bindtap="hideAddModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="form-item">
+          <text class="form-label">用户名</text>
+          <input class="form-input" 
+                 placeholder="请输入要添加的用户名" 
+                 value="{{addForm.username}}" 
+                 bindinput="onUsernameInput" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">拉黑原因</text>
+          <textarea class="form-textarea" 
+                    placeholder="请输入拉黑原因" 
+                    value="{{addForm.reason}}" 
+                    bindinput="onReasonInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="hideAddModal">取消</button>
+        <button class="confirm-btn" bindtap="addToBlacklist" type="primary">确认添加</button>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 移除确认弹窗 -->
+  <view class="modal-mask" wx:if="{{showRemoveModal}}" bindtap="hideRemoveModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">确认移除</text>
+        <text class="close-btn" bindtap="hideRemoveModal">×</text>
+      </view>
+      <view class="modal-body">
+        <text class="confirm-text">确定要将该用户从黑名单中移除吗？</text>
+        <text class="confirm-desc">移除后该用户将能看到您的订单</text>
+      </view>
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="hideRemoveModal">取消</button>
+        <button class="confirm-btn" bindtap="removeFromBlacklist" type="primary">确认移除</button>
+      </view>
+    </view>
+  </view>
+</view>

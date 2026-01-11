@@ -1,0 +1,50 @@
+/* frontend/theme/theme.wxss */
+ 
+/* 主题变量定义 */
+:root {
+  --theme-primary: #007AFF;
+  --theme-secondary: #34C759;
+  --theme-background: #FFFFFF;
+  --theme-surface: #F2F2F7;
+  --theme-text: #000000;
+  --theme-text-secondary: #666666;
+  --theme-border: #E5E5EA;
+  --theme-shadow: rgba(0, 0, 0, 0.1);
+  --theme-accent: #FF9500;
+}
+ 
+/* 深色主题变量 */
+.theme-dark {
+  --theme-primary: #0A84FF;
+  --theme-secondary: #30D158;
+  --theme-background: #000000;
+  --theme-surface: #1C1C1E;
+  --theme-text: #FFFFFF;
+  --theme-text-secondary: #8E8E93;
+  --theme-border: #38383A;
+  --theme-shadow: rgba(255, 255, 255, 0.1);
+  --theme-accent: #FF9F0A;
+}
+ 
+/* 通用主题应用类 */
+.theme-background {
+  background-color: var(--theme-background);
+  color: var(--theme-text);
+}
+ 
+.theme-surface {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+}
+ 
+.theme-primary {
+  color: var(--theme-primary);
+}
+ 
+.theme-secondary {
+  color: var(--theme-secondary);
+}
+ 
+.theme-border {
+  border-color: var(--theme-border);
+}

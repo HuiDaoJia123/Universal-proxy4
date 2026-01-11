@@ -1,0 +1,222 @@
+<!-- pages/substitute-class/substitute-class.wxml -->
+<view class="container">
+  <!-- 认证状态提示区域 -->
+  <view class="auth-status-section" wx:if="{{!isUserAuthenticated}}">
+    <view class="auth-tip">
+      <text class="tip-icon">🔔</text>
+      <text class="tip-text">完成实名认证可自动填充个人信息</text>
+      <button class="auth-btn" bindtap="goToRealNameAuth">去认证</button>
+    </view>
+  </view>
+ 
+  <view class="auth-status-success" wx:if="{{isUserAuthenticated}}">
+    <text class="success-icon">✓</text>
+    <text class="success-text">已通过实名认证，信息自动填充</text>
+  </view>
+ 
+  <!-- 基本信息区域 -->
+  <view class="section">
+    <view class="section-title">基本信息</view>
+    
+    <view class="form-item">
+      <text class="label">教学楼</text>
+      <input 
+        class="input" 
+        placeholder="请输入教学楼" 
+        value="{{building}}"
+        bindinput="onBuildingInput"
+      />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">教室</text>
+      <input 
+        class="input" 
+        placeholder="请输入教室号" 
+        value="{{classroom}}"
+        bindinput="onClassroomInput"
+      />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">科目</text>
+      <input 
+        class="input" 
+        placeholder="请输入课程科目" 
+        value="{{subject}}"
+        bindinput="onSubjectInput"
+      />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">学生姓名</text>
+      <input 
+        class="input" 
+        placeholder="请输入学生姓名" 
+        value="{{studentName}}"
+        bindinput="onStudentNameInput"
+        disabled="{{isUserAuthenticated}}" 
+      />
+      <text class="auth-hint" wx:if="{{isUserAuthenticated}}">实名认证信息</text>
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">学号</text>
+      <input 
+        class="input" 
+        placeholder="请输入学号" 
+        value="{{studentId}}"
+        bindinput="onStudentIdInput"
+        disabled="{{isUserAuthenticated}}"
+      />
+      <text class="auth-hint" wx:if="{{isUserAuthenticated}}">实名认证信息</text>
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">联系电话</text>
+      <input 
+        class="input" 
+        placeholder="请输入11位手机号" 
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+        type="number"
+        maxlength="11"
+      />
+    </view>
+  </view>
+ 
+  <!-- 代课时间选择 -->
+  <view class="section">
+    <view class="section-title">选择代课时间</view>
+    <view class="time-list">
+      <view 
+        class="time-item {{selectedTime === item.id ? 'selected' : ''}}" 
+        wx:for="{{classTimes}}" 
+        wx:key="id"
+        data-time="{{item}}"
+        bindtap="selectTime"
+      >
+        <view class="time-range">{{item.range}}</view>
+        <view class="time-duration">{{item.duration}}</view>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 附加服务 -->
+  <view class="section">
+    <view class="section-title">附加服务</view>
+    <view class="service-list">
+      <view 
+        class="service-item {{additionalServices.noteTaking ? 'selected' : ''}}"
+        data-service="noteTaking"
+        bindtap="toggleAdditionalService"
+      >
+        <text class="service-name">记笔记</text>
+        <text class="service-price">+¥5</text>
+      </view>
+      <view 
+        class="service-item {{additionalServices.homework ? 'selected' : ''}}"
+        data-service="homework"
+        bindtap="toggleAdditionalService"
+      >
+        <text class="service-name">做作业</text>
+        <text class="service-price">+¥10</text>
+      </view>
+      <view 
+        class="service-item {{additionalServices.presentation ? 'selected' : ''}}"
+        data-service="presentation"
+        bindtap="toggleAdditionalService"
+      >
+        <text class="service-name">展示汇报</text>
+        <text class="service-price">+¥15</text>
+      </view>
+      <view 
+        class="service-item {{additionalServices.answering ? 'selected' : ''}}"
+        data-service="answering"
+        bindtap="toggleAdditionalService"
+      >
+        <text class="service-name">回答问题</text>
+        <text class="service-price">+¥8</text>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 加价选择 -->
+  <view class="section">
+    <view class="section-title">加价激励</view>
+    <view class="price-boost-list">
+      <view 
+        class="price-boost-item {{priceBoost === 0 ? 'selected' : ''}}"
+        data-boost="0"
+        bindtap="selectPriceBoost"
+      >
+        <text class="boost-text">不加价</text>
+      </view>
+      <view 
+        class="price-boost-item {{priceBoost === 5 ? 'selected' : ''}}"
+        data-boost="5"
+        bindtap="selectPriceBoost"
+      >
+        <text class="boost-text">加价¥5</text>
+      </view>
+      <view 
+        class="price-boost-item {{priceBoost === 10 ? 'selected' : ''}}"
+        data-boost="10"
+        bindtap="selectPriceBoost"
+      >
+        <text class="boost-text">加价¥10</text>
+      </view>
+      <view 
+        class="price-boost-item {{priceBoost === 20 ? 'selected' : ''}}"
+        data-boost="20"
+        bindtap="selectPriceBoost"
+      >
+        <text class="boost-text">加价¥20</text>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 备注信息 -->
+  <view class="section">
+    <view class="section-title">备注信息</view>
+    <textarea 
+      class="remark-input" 
+      placeholder="请输入其他要求或注意事项..."
+      value="{{remark}}"
+      bindinput="onRemarkInput"
+      maxlength="200"
+    ></textarea>
+  </view>
+ 
+  <!-- 价格汇总 -->
+  <view class="price-summary">
+    <view class="price-item">
+      <text class="price-label">基础价格：</text>
+      <text class="price-value">¥{{basePrice}}</text>
+    </view>
+    <view class="price-item" wx:if="{{additionalPrice > 0}}">
+      <text class="price-label">附加服务：</text>
+      <text class="price-value">+¥{{additionalPrice}}</text>
+    </view>
+    <view class="price-item" wx:if="{{priceBoost > 0}}">
+      <text class="price-label">加价激励：</text>
+      <text class="price-value">+¥{{priceBoost}}</text>
+    </view>
+    <view class="price-total">
+      <text class="total-label">总计：</text>
+      <text class="total-value">¥{{totalPrice}}</text>
+    </view>
+  </view>
+ 
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <button class="contact-btn" bindtap="contactCustomerService">联系客服</button>
+    <button 
+      class="submit-btn {{canSubmit ? 'enabled' : 'disabled'}}" 
+      bindtap="submitOrder"
+      disabled="{{!canSubmit}}"
+    >
+      发布订单
+    </button>
+  </view>
+</view>

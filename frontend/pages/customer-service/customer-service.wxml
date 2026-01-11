@@ -1,0 +1,54 @@
+<!--pages/customer-service/customer-service.wxml-->
+<view class="container">
+  <!-- 聊天头部 -->
+  <view class="chat-header">
+    <view class="header-info">
+      <image class="service-avatar" src="/images/customer-service-avatar.png"></image>
+      <view class="service-info">
+        <text class="service-name">校园生活助手客服</text>
+        <text class="service-status">在线</text>
+      </view>
+    </view>
+    <view class="header-actions">
+      <button class="btn-phone" bindtap="makePhoneCall">电话</button>
+    </view>
+  </view>
+
+  <!-- 聊天内容 -->
+  <view class="chat-content" id="chat-content">
+    <block wx:for="{{messages}}" wx:key="id">
+      <view class="message {{item.sender === 'user' ? 'user-message' : 'service-message'}}">
+        <image class="avatar" src="{{item.sender === 'user' ? userInfo.avatarUrl : '/images/customer-service-avatar.png'}}"></image>
+        <view class="message-content">
+          <text class="message-text">{{item.content}}</text>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <input class="message-input" placeholder="输入您的问题..." value="{{inputMessage}}" bindinput="onInputMessage" bindconfirm="sendMessage" />
+    <button class="send-btn" bindtap="sendMessage">发送</button>
+  </view>
+
+  <!-- 常见问题 -->
+  <view class="faq-section">
+    <view class="faq-title">常见问题</view>
+    <view class="faq-list">
+      <view class="faq-item" bindtap="sendFAQ" data-question="如何申请成为骑手？">
+        <text>如何申请成为骑手？</text>
+      </view>
+      <view class="faq-item" bindtap="sendFAQ" data-question="订单取消后如何退款？">
+        <text>订单取消后如何退款？</text>
+      </view>
+      <view class="faq-item" bindtap="sendFAQ" data-question="代课服务如何保证质量？">
+        <text>代课服务如何保证质量？</text>
+      </view>
+      <view class="faq-item" bindtap="sendFAQ" data-question="投诉与建议">
+        <text>投诉与建议</text>
+      </view>
+    </view>
+  </view>
+</view>

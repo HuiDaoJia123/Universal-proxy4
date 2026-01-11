@@ -1,0 +1,45 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+  <!-- 顶部logo和欢迎语 -->
+  <view class="header-section">
+    <image class="logo" src="/images/logo.png"></image>
+    <text class="welcome-title">校园生活助手</text>
+    <text class="welcome-subtitle">让校园生活更便捷</text>
+  </view>
+ 
+  <!-- 登录方式选择 -->
+  <view class="login-methods">
+    <view class="method-title">选择登录方式</view>
+    
+    <!-- 微信一键登录 -->
+    <view class="method-item">
+      <button 
+        class="method-button" 
+        open-type="getPhoneNumber" 
+        bindgetphonenumber="onGetPhoneNumber">
+        <image class="method-icon" src="/images/wechat-login.png"></image>
+        <text class="method-name">微信一键登录</text>
+      </button>
+    </view>
+      
+    <!-- 手机号登录 -->
+    <view class="method-item" bindtap="phoneLogin">
+      <image class="method-icon" src="/images/phone-login.png"></image>
+      <text class="method-name">手机号登录</text>
+    </view>
+      
+    <!-- 游客体验 -->
+    <view class="method-item" bindtap="guestLogin">
+      <image class="method-icon" src="/images/guest-login.png"></image>
+      <text class="method-name">游客体验</text>
+    </view>
+  </view>
+ 
+  <!-- 协议说明 -->
+  <view class="agreement-section">
+    <text class="agreement-text">登录即代表同意</text>
+    <text class="agreement-link" bindtap="viewUserAgreement">《用户协议》</text>
+    <text class="agreement-text">和</text>
+    <text class="agreement-link" bindtap="viewPrivacyPolicy">《隐私政策》</text>
+  </view>
+</view>

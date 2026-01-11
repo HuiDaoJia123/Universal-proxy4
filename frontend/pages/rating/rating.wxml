@@ -1,0 +1,183 @@
+<!-- pages/rating/rating.wxml -->
+<view class="rating-page">
+  <!-- 顶部导航 -->
+  <view class="rating-header">
+    <view class="nav-back" bindtap="navigateBack">
+      <image class="back-icon" src="/assets/icons/back.svg"></image>
+    </view>
+    <text class="header-title">评价服务</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <!-- 服务卡片 -->
+  <view class="service-card">
+    <view class="card-header">
+      <text class="card-title">服务信息</text>
+      <text class="order-time">{{orderInfo.createTime}}</text>
+    </view>
+    
+    <view class="service-content">
+      <image class="service-img" src="{{orderInfo.serviceImage}}" mode="aspectFill"></image>
+      <view class="service-detail">
+        <text class="service-name">{{orderInfo.serviceName}}</text>
+        <text class="service-category">{{orderInfo.category}}</text>
+        <view class="price-section">
+          <text class="price-label">实付</text>
+          <text class="price-amount">¥{{orderInfo.amount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评分区域 -->
+  <view class="rating-section">
+    <view class="section-title">总体评分</view>
+    
+    <view class="overall-rating">
+      <view class="rating-score-display">
+        <text class="score-number">{{ratingData.overallScore}}</text>
+        <text class="score-text">分</text>
+      </view>
+      
+      <view class="stars-container">
+        <view class="stars-wrapper">
+          <block wx:for="{{[1,2,3,4,5]}}" wx:key="index">
+            <view 
+              class="star-item {{index < ratingData.overallScore ? 'active' : ''}}"
+              data-score="{{item}}"
+              bindtap="setOverallScore"
+            >
+              <image 
+                class="star-icon" 
+                src="{{index < ratingData.overallScore ? '/assets/icons/star-active.png' : '/assets/icons/star-inactive.png'}}"
+              ></image>
+            </view>
+          </block>
+        </view>
+        <text class="rating-hint">点击星星评分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分项评分 -->
+  <view class="detail-rating-section">
+    <view class="section-title">分项评价</view>
+    
+    <view class="rating-items">
+      <view class="rating-item">
+        <text class="item-label">服务态度</text>
+        <view class="item-stars">
+          <block wx:for="{{[1,2,3,4,5]}}" wx:key="index">
+            <view 
+              class="small-star {{index < ratingData.attitudeScore ? 'active' : ''}}"
+              data-type="attitudeScore"
+              data-score="{{item}}"
+              bindtap="setDetailScore"
+            >
+              <text class="small-star-icon">★</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      
+      <view class="rating-item">
+        <text class="item-label">专业水平</text>
+        <view class="item-stars">
+          <block wx:for="{{[1,2,3,4,5]}}" wx:key="index">
+            <view 
+              class="small-star {{index < ratingData.professionalScore ? 'active' : ''}}"
+              data-type="professionalScore"
+              data-score="{{item}}"
+              bindtap="setDetailScore"
+            >
+              <text class="small-star-icon">★</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      
+      <view class="rating-item">
+        <text class="item-label">响应速度</text>
+        <view class="item-stars">
+          <block wx:for="{{[1,2,3,4,5]}}" wx:key="index">
+            <view 
+              class="small-star {{index < ratingData.responseScore ? 'active' : ''}}"
+              data-type="responseScore"
+              data-score="{{item}}"
+              bindtap="setDetailScore"
+            >
+              <text class="small-star-icon">★</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评价标签 -->
+  <view class="tags-section">
+    <view class="section-title">服务印象</view>
+    <view class="tags-container">
+      <block wx:for="{{ratingTags}}" wx:key="id">
+        <view 
+          class="tag-item {{item.selected ? 'selected' : ''}}"
+          data-tag="{{item.id}}"
+          bindtap="toggleTag"
+        >
+          <text class="tag-text">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 详细评价 -->
+  <view class="comment-section">
+    <view class="section-title">详细评价</view>
+    <view class="comment-box">
+      <textarea 
+        class="comment-input" 
+        placeholder="分享您的服务体验，帮助其他用户做出选择..."
+        value="{{ratingData.comment}}"
+        bindinput="onCommentInput"
+        maxlength="300"
+      ></textarea>
+      <view class="comment-footer">
+        <view class="anonymous-option">
+          <view class="checkbox {{ratingData.anonymous ? 'checked' : ''}}" bindtap="toggleAnonymous">
+            <image 
+              class="check-icon" 
+              src="{{ratingData.anonymous ? '/assets/icons/checkbox-checked.png' : '/assets/icons/checkbox-unchecked.png'}}"
+            ></image>
+          </view>
+          <text class="anonymous-text">匿名评价</text>
+        </view>
+        <text class="word-count">{{ratingData.comment.length}}/300</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button 
+      class="submit-btn {{isFormValid ? 'active' : ''}}" 
+      bindtap="submitRating"
+      disabled="{{!isFormValid}}"
+    >
+      {{isSubmitting ? '提交中...' : '提交评价'}}
+    </button>
+  </view>
+
+  <!-- 提交成功弹窗 -->
+  <view class="success-modal {{showSuccessModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="hideSuccessModal"></view>
+    <view class="modal-content">
+      <image class="success-icon" src="/assets/icons/success-badge.png"></image>
+      <text class="modal-title">评价成功</text>
+      <text class="modal-desc">感谢您的评价，这将帮助其他用户做出更好的选择</text>
+      <view class="modal-actions">
+        <button class="modal-btn secondary" bindtap="hideSuccessModal">继续评价</button>
+        <button class="modal-btn primary" bindtap="navigateToOrder">返回订单</button>
+      </view>
+    </view>
+  </view>
+</view>

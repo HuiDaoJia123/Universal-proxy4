@@ -1,0 +1,52 @@
+<!--pages/announcement/announcement.wxml-->
+<view class="announcement-container">
+  <!-- 公告类型标签页 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{currentTab === 'intro' ? 'active' : ''}}" 
+      bindtap="switchTab" 
+      data-tab="intro"
+    >
+      软件介绍
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'guide' ? 'active' : ''}}" 
+      bindtap="switchTab" 
+      data-tab="guide"
+    >
+      新手指导
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'user_notice' ? 'active' : ''}}" 
+      bindtap="switchTab" 
+      data-tab="user_notice"
+    >
+      用户须知
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'rider_notice' ? 'active' : ''}}" 
+      bindtap="switchTab" 
+      data-tab="rider_notice"
+    >
+      骑手须知
+    </view>
+  </view>
+ 
+  <!-- 公告内容区域 -->
+  <view class="content-area">
+    <view class="announcement-header">
+      <text class="announcement-title">{{currentAnnouncement.title || '加载中...'}}</text>
+      <text class="announcement-time">{{currentAnnouncement.created_at || ''}}</text>
+    </view>
+    <view class="announcement-content">
+      <text class="content-text">{{currentAnnouncement.content || '加载中...'}}</text>
+    </view>
+  </view>
+ 
+  <!-- 加载中状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-content">
+      <text>加载中...</text>
+    </view>
+  </view>
+</view>

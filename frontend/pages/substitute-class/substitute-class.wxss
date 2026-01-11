@@ -1,0 +1,337 @@
+/* pages/substitute-class/substitute-class.wxss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+ 
+/* 认证状态样式 */
+.auth-status-section {
+  margin-bottom: 20rpx;
+}
+ 
+.auth-tip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background: #fff3cd;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #ffc107;
+}
+ 
+.tip-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+ 
+.tip-text {
+  flex: 1;
+  color: #856404;
+  font-size: 28rpx;
+}
+ 
+.auth-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  margin: 0;
+  line-height: 1.5;
+}
+ 
+.auth-status-success {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: #d4edda;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #28a745;
+  margin-bottom: 20rpx;
+}
+ 
+.success-icon {
+  color: #28a745;
+  font-weight: bold;
+  margin-right: 12rpx;
+  font-size: 32rpx;
+}
+ 
+.success-text {
+  color: #155724;
+  font-size: 28rpx;
+}
+ 
+.auth-hint {
+  color: #999;
+  font-size: 22rpx;
+  margin-top: 8rpx;
+  display: block;
+}
+ 
+input[disabled] {
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+}
+ 
+/* 通用样式 */
+.section {
+  background: white;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+ 
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+ 
+.form-item {
+  margin-bottom: 30rpx;
+}
+ 
+.form-item:last-child {
+  margin-bottom: 0;
+}
+ 
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+ 
+.input {
+  width: 100%;
+  height: 80rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+ 
+.input:focus {
+  border-color: #007bff;
+}
+ 
+.remark-input {
+  width: 100%;
+  min-height: 120rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+ 
+/* 时间选择样式 */
+.time-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+ 
+.time-item {
+  padding: 24rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  text-align: center;
+  background: white;
+  transition: all 0.3s ease;
+}
+ 
+.time-item.selected {
+  border-color: #007bff;
+  background: #e3f2fd;
+}
+ 
+.time-range {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+ 
+.time-duration {
+  font-size: 24rpx;
+  color: #666;
+}
+ 
+.time-item.selected .time-range {
+  color: #007bff;
+}
+ 
+/* 附加服务样式 */
+.service-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+ 
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  background: white;
+  transition: all 0.3s ease;
+}
+ 
+.service-item.selected {
+  border-color: #28a745;
+  background: #d4edda;
+}
+ 
+.service-name {
+  font-size: 28rpx;
+  color: #333;
+}
+ 
+.service-price {
+  font-size: 26rpx;
+  color: #28a745;
+  font-weight: bold;
+}
+ 
+.service-item.selected .service-name {
+  color: #28a745;
+}
+ 
+/* 加价选择样式 */
+.price-boost-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+ 
+.price-boost-item {
+  padding: 24rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  text-align: center;
+  background: white;
+  transition: all 0.3s ease;
+}
+ 
+.price-boost-item.selected {
+  border-color: #ff6b35;
+  background: #fff5f0;
+}
+ 
+.boost-text {
+  font-size: 28rpx;
+  color: #333;
+}
+ 
+.price-boost-item.selected .boost-text {
+  color: #ff6b35;
+}
+ 
+/* 价格汇总样式 */
+.price-summary {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+ 
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+ 
+.price-label {
+  font-size: 28rpx;
+  color: #666;
+}
+ 
+.price-value {
+  font-size: 28rpx;
+  color: #333;
+}
+ 
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20rpx;
+  border-top: 2rpx solid #f0f0f0;
+  margin-top: 20rpx;
+}
+ 
+.total-label {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+ 
+.total-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff6b35;
+}
+ 
+/* 底部按钮样式 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  background: white;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+ 
+.contact-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 20rpx;
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+ 
+.submit-btn {
+  flex: 2;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+ 
+.submit-btn.disabled {
+  background: #ccc;
+  color: #999;
+}
+ 
+.submit-btn.enabled {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+ 
+.submit-btn.enabled:active {
+  transform: scale(0.98);
+}

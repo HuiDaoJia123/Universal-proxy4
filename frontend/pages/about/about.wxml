@@ -1,0 +1,158 @@
+<!-- pages/about/about.wxml -->
+<view class="about-container">
+  <!-- 顶部导航 -->
+  <view class="about-header">
+    <view class="nav-back" bindtap="navigateBack">
+      <image class="back-icon" src="/assets/icons/back-arrow.png"></image>
+    </view>
+    <text class="header-title">关于我们</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <!-- 主要内容 -->
+  <scroll-view class="about-content" scroll-y>
+    <!-- 公司头图 -->
+    <view class="hero-section">
+      <image class="hero-image" src="/assets/images/about-hero.jpg" mode="aspectFill"></image>
+      <view class="hero-overlay">
+        <image class="company-logo" src="/assets/images/logo.png"></image>
+        <text class="company-slogan">让生活更便捷，让服务更贴心</text>
+        <view class="version-badge">版本 1.0</view>
+      </view>
+    </view>
+
+    <!-- 开发者信息 -->
+    <view class="developer-section">
+      <view class="section-title">开发团队</view>
+      <view class="developer-card">
+        <image class="developer-logo" src="/assets/images/developer-logo.png"></image>
+        <view class="developer-info">
+          <text class="developer-name">科技开发团队</text>
+          <text class="developer-desc">专注于打造优质用户体验的技术团队</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 公司简介 -->
+    <view class="intro-section">
+      <view class="section-title">公司简介</view>
+      <view class="intro-content">
+        <text class="intro-text">
+          {{companyInfo.introduction}}
+        </text>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-number">{{companyInfo.stats.users}}+</text>
+          <text class="stat-label">服务用户</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{companyInfo.stats.services}}+</text>
+          <text class="stat-label">完成订单</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{companyInfo.stats.cities}}+</text>
+          <text class="stat-label">服务城市</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我们的优势 -->
+    <view class="advantages-section">
+      <view class="section-title">我们的优势</view>
+      <view class="advantages-grid">
+        <view class="advantage-item" wx:for="{{advantages}}" wx:key="id">
+          <view class="advantage-icon">
+            <image class="advantage-img" src="{{item.icon}}"></image>
+          </view>
+          <text class="advantage-title">{{item.title}}</text>
+          <text class="advantage-desc">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 版本信息 -->
+    <view class="version-section">
+      <view class="section-title">版本信息</view>
+      <view class="version-card">
+        <view class="version-header">
+          <view class="version-badge-large">v1.0</view>
+          <view class="version-text">
+            <text class="app-name">{{versionInfo.appName}}</text>
+            <text class="version-stable">稳定版</text>
+          </view>
+        </view>
+        <view class="version-details">
+          <text class="update-time">发布日期: {{versionInfo.releaseDate}}</text>
+          <text class="app-size">应用大小: {{versionInfo.size}}</text>
+        </view>
+        <view class="version-features">
+          <text class="features-title">版本特色:</text>
+          <view class="features-list">
+            <text class="feature-item" wx:for="{{versionInfo.features}}" wx:key="*this">• {{item}}</text>
+          </view>
+        </view>
+        <button class="check-update-btn" bindtap="checkForUpdate">检查更新</button>
+      </view>
+    </view>
+
+    <!-- 联系我们 -->
+    <view class="contact-section">
+      <view class="section-title">联系我们</view>
+      <view class="contact-methods">
+        <view class="contact-item" bindtap="makePhoneCall">
+          <view class="contact-icon">
+            <image class="contact-img" src="/assets/icons/phone-call.png"></image>
+          </view>
+          <view class="contact-info">
+            <text class="contact-type">客服热线</text>
+            <text class="contact-value">{{contactInfo.phone}}</text>
+          </view>
+          <image class="contact-arrow" src="/assets/icons/arrow-right.png"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 法律信息 -->
+    <view class="legal-section">
+      <view class="legal-links">
+        <text class="legal-link" bindtap="viewUserAgreement">用户协议</text>
+        <text class="legal-link" bindtap="viewPrivacyPolicy">隐私政策</text>
+        <text class="legal-link" bindtap="viewDisclaimer">免责声明</text>
+      </view>
+      <text class="copyright">{{companyInfo.copyright}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 检查更新弹窗 -->
+  <view class="update-modal {{showUpdateModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="hideUpdateModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">版本更新</text>
+      </view>
+      <view class="modal-body">
+        <text class="current-version">当前版本: v1.0</text>
+        <text class="update-version" wx:if="{{updateInfo.hasUpdate}}">最新版本: v{{updateInfo.version}}</text>
+        <text class="update-size" wx:if="{{updateInfo.hasUpdate}}">大小: {{updateInfo.size}}</text>
+        <view class="update-features" wx:if="{{updateInfo.hasUpdate}}">
+          <text class="update-features-title">更新内容:</text>
+          <view class="update-features-list">
+            <text class="update-feature-item" wx:for="{{updateInfo.features}}" wx:key="*this">• {{item}}</text>
+          </view>
+        </view>
+        <view class="no-update" wx:if="{{!updateInfo.hasUpdate}}">
+          <image class="no-update-icon" src="/assets/icons/up-to-date.png"></image>
+          <text class="no-update-text">当前已是最新版本</text>
+        </view>
+      </view>
+      <view class="modal-actions">
+        <button class="modal-btn secondary" bindtap="hideUpdateModal" wx:if="{{updateInfo.hasUpdate}}">稍后更新</button>
+        <button class="modal-btn primary" bindtap="{{updateInfo.hasUpdate ? 'startUpdate' : 'hideUpdateModal'}}">
+          {{updateInfo.hasUpdate ? '立即更新' : '确定'}}
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

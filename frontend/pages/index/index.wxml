@@ -1,0 +1,56 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部搜索栏和客服 -->
+  <view class="top-section">
+    <view class="customer-service" bindtap="contactCustomerService">
+      <image class="service-icon" src="/images/customer-service.png"></image>
+    </view>
+    <view class="search-section">
+      <view class="search-box">
+        <icon class="search-icon" type="search" size="16"></icon>
+        <input class="search-input" placeholder="搜索服务..." placeholder-class="placeholder-style" />
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 流动公告栏 -->
+  <van-notice-bar 
+    left-icon="volume" 
+    scrollable 
+    mode="closeable"
+    color="#00982D"
+    background="rgba(50, 174, 87, 0.12)"
+    text="{{noticeText}}"
+    wx:if="{{noticeText}}"
+    bind:close="onNoticeClose"
+  />
+ 
+  <!-- 轮播图 -->
+  <swiper class="swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{500}}">
+    <block wx:for="{{banners}}" wx:key="id">
+      <swiper-item>
+        <view class="swiper-item {{item.bgClass}}">
+          <text class="swiper-text">{{item.text}}</text>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+ 
+  <!-- 服务网格 -->
+  <view class="service-section">
+    <view class="section-header">
+      <text class="section-title">便捷服务</text>
+    </view>
+ 
+    <view class="service-grid">
+      <block wx:for="{{services}}" wx:key="id">
+        <view class="service-item" data-service="{{item}}" bindtap="onServiceTap">
+          <view class="service-icon {{item.bgClass}}">
+            <image class="icon-image" src="{{item.iconPath}}" mode="aspectFit"></image>
+          </view>
+          <text class="service-name">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

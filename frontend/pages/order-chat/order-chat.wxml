@@ -1,0 +1,35 @@
+<!--pages/order-chat/order-chat.wxml-->
+<view class="container">
+  <!-- 聊天头部 -->
+  <view class="chat-header">
+    <view class="header-info">
+      <image class="user-avatar" src="/images/default-avatar.png"></image>
+      <view class="user-info">
+        <text class="user-name">{{serviceProvider}}</text>
+        <text class="user-status">{{serviceProviderType === 'rider' ? '骑手' : '代课同学'}}</text>
+      </view>
+    </view>
+    <view class="header-actions">
+      <button class="btn-customer-service" bindtap="requestCustomerService">客服介入</button>
+    </view>
+  </view>
+
+  <!-- 聊天内容 -->
+  <view class="chat-content" id="chat-content">
+    <block wx:for="{{messages}}" wx:key="id">
+      <view class="message {{item.sender === 'user' ? 'user-message' : 'provider-message'}}">
+        <image class="avatar" src="{{item.sender === 'user' ? userInfo.avatarUrl : '/images/default-avatar.png'}}"></image>
+        <view class="message-content">
+          <text class="message-text">{{item.content}}</text>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <input class="message-input" placeholder="输入消息..." value="{{inputMessage}}" bindinput="onInputMessage" bindconfirm="sendMessage" />
+    <button class="send-btn" bindtap="sendMessage">发送</button>
+  </view>
+</view>

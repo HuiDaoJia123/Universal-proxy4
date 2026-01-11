@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "关于我们",
+  "navigationStyle": "custom",
+  "backgroundColor": "#f8f9fa",
+  "enablePullDownRefresh": false
+}

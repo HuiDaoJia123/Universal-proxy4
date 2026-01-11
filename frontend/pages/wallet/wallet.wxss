@@ -1,0 +1,312 @@
+/* pages/wallet/wallet.wxss */
+.container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 30rpx;
+}
+
+/* 钱包概览 */
+.wallet-overview {
+  background: linear-gradient(135deg, #1E90FF, #00BFFF);
+  color: white;
+  padding: 40rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.balance-section {
+  text-align: center;
+  margin-bottom: 50rpx;
+}
+
+.balance-label {
+  display: block;
+  font-size: 28rpx;
+  opacity: 0.9;
+  margin-bottom: 20rpx;
+}
+
+.balance-amount {
+  font-size: 60rpx;
+  font-weight: bold;
+}
+
+.stats-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  background-color: white;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.btn-withdraw, .btn-cards {
+  flex: 1;
+  border-radius: 10rpx;
+  padding: 25rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  margin: 0 15rpx;
+}
+
+.btn-withdraw {
+  background-color: #1E90FF;
+  color: white;
+  border: none;
+}
+
+.btn-cards {
+  background-color: white;
+  color: #1E90FF;
+  border: 1rpx solid #1E90FF;
+}
+
+/* 交易记录 */
+.transaction-section {
+  background-color: white;
+  border-radius: 16rpx;
+  margin: 0 30rpx;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.transaction-list {
+  padding: 0;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-left {
+  flex: 1;
+}
+
+.transaction-title {
+  display: block;
+  font-size: 30rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.transaction-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.transaction-right {
+  text-align: right;
+}
+
+.transaction-amount {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.transaction-amount.income {
+  color: #4ECDC4;
+}
+
+.transaction-amount.withdraw {
+  color: #FF6B6B;
+}
+
+.transaction-status {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.transaction-status.completed {
+  background-color: rgba(78, 205, 196, 0.1);
+  color: #4ECDC4;
+}
+
+.transaction-status.processing {
+  background-color: rgba(255, 160, 122, 0.1);
+  color: #FFA07A;
+}
+
+.transaction-status.frozen {
+  background-color: rgba(153, 153, 153, 0.1);
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-icon {
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 提现弹窗 */
+.withdraw-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.withdraw-dialog.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.dialog-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 40rpx 30rpx;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+}
+
+.withdraw-dialog.show .dialog-content {
+  transform: translateY(0);
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.dialog-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.dialog-close {
+  color: #ccc;
+}
+
+/* 提现表单 */
+.amount-input {
+  display: flex;
+  align-items: center;
+  border-bottom: 2rpx solid #1E90FF;
+  padding: 20rpx 0;
+  margin-bottom: 20rpx;
+}
+
+.currency-symbol {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+.amount-field {
+  flex: 1;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.all-withdraw {
+  color: #1E90FF;
+  font-size: 26rpx;
+}
+
+.balance-hint {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 30rpx;
+}
+
+.withdraw-rules {
+  background-color: #f9f9f9;
+  padding: 25rpx;
+  border-radius: 8rpx;
+  margin-bottom: 40rpx;
+}
+
+.rule-item {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.rule-item:last-child {
+  margin-bottom: 0;
+}
+
+.btn-confirm {
+  background-color: #1E90FF;
+  color: white;
+  border-radius: 10rpx;
+  padding: 25rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}

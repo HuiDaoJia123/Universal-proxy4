@@ -1,0 +1,379 @@
+/* pages/my/my.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+ 
+/* 登录区域 */
+.login-section {
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(135deg, #00982D 0%, #00c853 100%);
+}
+ 
+.login-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/images/login-bg.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+}
+ 
+.login-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40rpx;
+}
+ 
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 80rpx;
+}
+ 
+.login-logo {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  margin-bottom: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+}
+ 
+.login-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20rpx;
+}
+ 
+.login-subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+ 
+.login-actions {
+  width: 100%;
+}
+ 
+.login-btn {
+  width: 100%;
+  height: 96rpx;
+  background: #ffffff;
+  border-radius: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #00982D;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
+}
+ 
+.btn-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+}
+ 
+/* 用户区域 */
+.user-section {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+ 
+.user-header {
+  background: linear-gradient(135deg, #00982D 0%, #00c853 100%);
+  padding: 40rpx 32rpx 60rpx;
+  display: flex;
+  align-items: center;
+}
+ 
+.user-avatar-wrapper {
+  position: relative;
+  margin-right: 24rpx;
+}
+ 
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+}
+ 
+.verified-badge {
+  position: absolute;
+  bottom: -8rpx;
+  right: -8rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: #ff9800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3rpx solid #ffffff;
+}
+ 
+.verified-icon {
+  font-size: 24rpx;
+  color: #ffffff;
+  font-weight: bold;
+}
+ 
+.user-info {
+  flex: 1;
+}
+ 
+.user-name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+ 
+.user-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 16rpx;
+}
+ 
+.user-level {
+  padding: 4rpx 12rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+}
+ 
+.level-text {
+  font-size: 20rpx;
+  color: #ffffff;
+}
+ 
+.user-phone {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+ 
+.edit-btn {
+  padding: 16rpx;
+}
+ 
+.edit-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+ 
+/* 统计卡片 */
+.stats-card {
+  margin: -40rpx 32rpx 32rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+ 
+.stats-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ 
+.stats-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #00982D;
+  margin-bottom: 8rpx;
+}
+ 
+.stats-label {
+  font-size: 24rpx;
+  color: #999999;
+}
+ 
+.stats-divider {
+  width: 2rpx;
+  height: 48rpx;
+  background: #f0f0f0;
+}
+ 
+/* 菜单卡片 */
+.menu-card {
+  margin: 0 32rpx 24rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+ 
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+ 
+.menu-item:last-child {
+  border-bottom: none;
+}
+ 
+.menu-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+ 
+.menu-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 24rpx;
+}
+ 
+.menu-text-wrapper {
+  flex: 1;
+}
+ 
+.menu-title {
+  font-size: 30rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
+  display: block;
+}
+ 
+.menu-subtitle {
+  font-size: 24rpx;
+  color: #999999;
+  display: block;
+}
+ 
+.menu-right {
+  display: flex;
+  align-items: center;
+}
+ 
+.badge {
+  background: #ff5252;
+  border-radius: 20rpx;
+  padding: 4rpx 12rpx;
+  margin-right: 16rpx;
+}
+ 
+.badge-text {
+  font-size: 20rpx;
+  color: #ffffff;
+}
+ 
+.menu-arrow {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.3;
+}
+ 
+/* 认证提示卡片 */
+.verify-card {
+  margin: 0 32rpx 24rpx;
+  background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+  border-radius: 24rpx;
+  padding: 24rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+ 
+.verify-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+ 
+.verify-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 24rpx;
+}
+ 
+.verify-info {
+  flex: 1;
+}
+ 
+.verify-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 8rpx;
+  display: block;
+}
+ 
+.verify-desc {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+}
+ 
+.verify-btn {
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 16rpx 32rpx;
+}
+ 
+.verify-btn-text {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #ff5722;
+}
+ 
+/* 退出登录 */
+.logout-card {
+  margin: 0 32rpx 24rpx;
+}
+ 
+.logout-btn {
+  width: 100%;
+  height: 88rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  font-size: 30rpx;
+  color: #ff5252;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+ 
+.logout-btn::after {
+  border: none;
+}
+ 
+/* 客服卡片 */
+.service-card {
+  margin: 0 32rpx 32rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+ 
+.service-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 16rpx;
+}
+ 
+.service-text {
+  font-size: 28rpx;
+  color: #666666;
+}

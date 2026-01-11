@@ -1,0 +1,410 @@
+/* pages/diandan/diandan.wxss */
+.container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 30rpx;
+}
+
+/* 订单类型切换 - 三个标签页 */
+.order-type-tabs {
+  display: flex;
+  background-color: white;
+  border-bottom: 1rpx solid #eee;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 25rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab.active {
+  color: #1E90FF;
+  font-weight: bold;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background-color: #1E90FF;
+  border-radius: 2rpx;
+}
+
+/* 学校订单的筛选和排序区域 */
+.filter-section {
+  background-color: white;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+/* 服务筛选区域 */
+.service-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.filter-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 20rpx;
+  white-space: nowrap;
+}
+
+.filter-scroll {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.filter-tags {
+  display: inline-flex;
+  gap: 15rpx;
+  padding: 10rpx 0;
+}
+
+.filter-tag {
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  color: #666;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.filter-tag.active {
+  color: white;
+  background-color: #1E90FF;
+  transform: scale(1.05);
+}
+
+/* 排序和搜索区域 */
+.sort-search-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort-options {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.sort-title {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.sort-option {
+  padding: 10rpx 20rpx;
+  font-size: 24rpx;
+  color: #666;
+  background-color: #f5f5f5;
+  border-radius: 20rpx;
+}
+
+.sort-option.active {
+  color: white;
+  background-color: #1E90FF;
+}
+
+.date-search {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.date-input {
+  padding: 10rpx 15rpx;
+  font-size: 24rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  background-color: white;
+  min-width: 200rpx;
+}
+
+.btn-today {
+  padding: 10rpx 20rpx;
+  font-size: 24rpx;
+  background-color: #4ECDC4;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+}
+
+/* 状态筛选 */
+.status-filter {
+  background-color: white;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.filter-tabs {
+  display: flex;
+  justify-content: space-around;
+}
+
+.filter-tab {
+  padding: 15rpx 0;
+  font-size: 26rpx;
+  color: #666;
+  position: relative;
+}
+
+.filter-tab.active {
+  color: #1E90FF;
+  font-weight: bold;
+}
+
+.filter-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background-color: #1E90FF;
+  border-radius: 2rpx;
+}
+
+/* 订单列表 */
+.order-list {
+  padding: 20rpx;
+}
+
+.order-item {
+  background-color: white;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.order-id {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.order-status-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.order-status {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  margin-bottom: 5rpx;
+}
+
+.order-status.pending {
+  color: #FF6B6B;
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.order-status.accepted {
+  color: #1E90FF;
+  background-color: rgba(30, 144, 255, 0.1);
+}
+
+.order-status.in_progress {
+  color: #FFA07A;
+  background-color: rgba(255, 160, 122, 0.1);
+}
+
+.order-status.completed {
+  color: #4ECDC4;
+  background-color: rgba(78, 205, 196, 0.1);
+}
+
+.order-status.canceled {
+  color: #999;
+  background-color: rgba(153, 153, 153, 0.1);
+}
+
+.order-status.expired {
+  color: #999;
+  background-color: rgba(153, 153, 153, 0.1);
+}
+
+.pay-status {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.pay-status.paid {
+  color: #4ECDC4;
+}
+
+.pay-status.unpaid {
+  color: #FF6B6B;
+}
+
+.order-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.order-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.countdown-section {
+  display: flex;
+  align-items: center;
+}
+
+.countdown-label {
+  font-size: 24rpx;
+  color: #666;
+  margin-right: 10rpx;
+}
+
+.countdown-time {
+  font-size: 24rpx;
+  color: #FF6B6B;
+  font-weight: bold;
+}
+
+.order-price .price {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FF6B6B;
+}
+
+.order-footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-address, .order-course {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.pickup-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 15rpx;
+}
+
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15rpx;
+}
+
+.btn {
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  border-radius: 30rpx;
+  border: 1rpx solid #ddd;
+  background-color: white;
+}
+
+.btn-grab {
+  background-color: #1E90FF;
+  color: white;
+  border-color: #1E90FF;
+}
+
+.btn-detail {
+  color: #666;
+  border-color: #ddd;
+}
+
+.btn-cancel {
+  color: #999;
+  border-color: #ddd;
+}
+
+.btn-chat {
+  color: #1E90FF;
+  border-color: #1E90FF;
+}
+
+.btn-complete {
+  color: #4ECDC4;
+  border-color: #4ECDC4;
+}
+
+.btn-progress {
+  color: #FFA07A;
+  border-color: #FFA07A;
+}
+
+.btn-comment {
+  color: #FFA07A;
+  border-color: #FFA07A;
+}
+
+.btn-again {
+  color: #4ECDC4;
+  border-color: #4ECDC4;
+}
+
+.btn-primary {
+  background-color: #1E90FF;
+  color: white;
+  border: none;
+  padding: 20rpx 40rpx;
+  margin-top: 30rpx;
+  border-radius: 10rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 30rpx;
+}

@@ -1,0 +1,188 @@
+<!--pages/order-detail/order-detail.wxml-->
+<view class="container" wx:if="{{order}}">
+  <!-- 订单状态栏 -->
+  <view class="status-bar" style="background: linear-gradient(135deg, {{orderStatus[order.status].color}}, {{orderStatus[order.status].color}}99);">
+    <view class="status-content">
+      <text class="status-text">{{orderStatus[order.status].text}}</text>
+      <text class="status-desc" wx:if="{{order.status === 'pending'}}">等待骑手接单</text>
+      <text class="status-desc" wx:if="{{order.status === 'accepted'}}">{{order.acceptorName}}已接单</text>
+      <text class="status-desc" wx:if="{{order.status === 'in_progress'}}">服务进行中</text>
+      <text class="status-desc" wx:if="{{order.status === 'completed'}}">订单已完成</text>
+      <text class="status-desc" wx:if="{{order.status === 'canceled'}}">订单已取消</text>
+      <text class="status-desc" wx:if="{{order.status === 'expired'}}">订单已过期</text>
+    </view>
+  </view>
+
+  <!-- 订单基本信息 -->
+  <view class="order-info-section">
+    <view class="section-header">
+      <text class="section-title">订单信息</text>
+      <text class="order-no" bindtap="copyOrderNo">订单号：{{order.orderNo}}</text>
+    </view>
+    
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="info-label">服务类型</text>
+        <text class="info-value">{{order.serviceName}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">创建时间</text>
+        <text class="info-value">{{order.createTime}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">订单金额</text>
+        <text class="info-value price">¥{{order.price.toFixed(2)}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">支付状态</text>
+        <text class="info-value {{payStatus[order.payStatus].color}}">{{payStatus[order.payStatus].text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务详情 -->
+  <view class="service-detail-section">
+    <view class="section-header">
+      <text class="section-title">服务详情</text>
+      <text class="view-detail" bindtap="viewServiceDetail">查看详情</text>
+    </view>
+    
+    <view class="service-content">
+      <text class="service-brief">{{getServiceBrief(order)}}</text>
+    </view>
+  </view>
+
+  <!-- 时间线 -->
+  <view class="timeline-section" wx:if="{{timeline.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">订单进度</text>
+    </view>
+    
+    <view class="timeline">
+      <block wx:for="{{timeline}}" wx:key="time" wx:for-index="index">
+        <view class="timeline-item {{index === timeline.length - 1 ? 'last' : ''}}">
+          <view class="timeline-icon {{item.icon}} {{item.status}}">
+            <text class="icon-text">{{getTimelineIcon(item.icon)}}</text>
+          </view>
+          <view class="timeline-content">
+            <text class="timeline-title">{{item.title}}</text>
+            <text class="timeline-desc">{{item.description}}</text>
+            <text class="timeline-time">{{item.time}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <!-- 待接单状态 -->
+    <block wx:if="{{order.status === 'pending'}}">
+      <button class="btn btn-contact" bindtap="contactUser">联系客服</button>
+      <button class="btn btn-cancel" bindtap="cancelOrder">取消订单</button>
+    </block>
+    
+    <!-- 已接单/进行中状态 -->
+    <block wx:if="{{order.status === 'accepted' || order.status === 'in_progress'}}">
+      <button class="btn btn-contact" bindtap="contactUser">联系{{order.acceptorName || '骑手'}}</button>
+      <button class="btn btn-complete" bindtap="confirmComplete">确认完成</button>
+    </block>
+    
+    <!-- 已完成状态 -->
+    <block wx:if="{{order.status === 'completed'}}">
+      <button class="btn btn-contact" bindtap="contactUser">联系客服</button>
+      <button class="btn btn-rating" wx:if="{{!order.rated}}" bindtap="showRatingDialog">评价订单</button>
+      <button class="btn btn-again" bindtap="orderAgain">再次下单</button>
+    </block>
+    
+    <!-- 已取消/已过期状态 -->
+    <block wx:if="{{order.status === 'canceled' || order.status === 'expired'}}">
+      <button class="btn btn-contact" bindtap="contactCustomerService">联系客服</button>
+      <button class="btn btn-again" bindtap="orderAgain">重新下单</button>
+    </block>
+  </view>
+
+  <!-- 取消订单对话框 -->
+  <view class="dialog {{showCancelDialog ? 'show' : ''}}">
+    <view class="dialog-mask" bindtap="hideCancelDialog"></view>
+    <view class="dialog-content">
+      <view class="dialog-header">
+        <text class="dialog-title">取消订单</text>
+      </view>
+      <view class="dialog-body">
+        <text class="dialog-text">确定要取消这个订单吗？取消后款项将原路退回。</text>
+      </view>
+      <view class="dialog-actions">
+        <button class="btn-dialog btn-cancel" bindtap="hideCancelDialog">再想想</button>
+        <button class="btn-dialog btn-confirm" bindtap="confirmCancelOrder">确认取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评价对话框 -->
+  <view class="dialog {{showRatingDialog ? 'show' : ''}}">
+    <view class="dialog-mask" bindtap="hideRatingDialog"></view>
+    <view class="dialog-content rating-dialog">
+      <view class="dialog-header">
+        <text class="dialog-title">评价订单</text>
+        <icon class="dialog-close" type="clear" size="20" bindtap="hideRatingDialog"></icon>
+      </view>
+      
+      <view class="rating-content">
+        <!-- 评分 -->
+        <view class="rating-score">
+          <text class="score-label">服务评分</text>
+          <view class="score-stars">
+            <block wx:for="{{5}}" wx:key="index">
+              <text 
+                class="star {{index < ratingData.score ? 'active' : ''}}" 
+                data-score="{{index + 1}}"
+                bindtap="selectRatingScore"
+              >★</text>
+            </block>
+          </view>
+          <text class="score-text">{{ratingData.score}}分</text>
+        </view>
+        
+        <!-- 评价标签 -->
+        <view class="rating-tags">
+          <text class="tags-label">服务标签（可选）</text>
+          <view class="tags-list">
+            <block wx:for="{{ratingTags}}" wx:key="index">
+              <text 
+                class="tag {{ratingData.tags.includes(item) ? 'active' : ''}}"
+                data-tag="{{item}}"
+                bindtap="toggleRatingTag"
+              >{{item}}</text>
+            </block>
+          </view>
+        </view>
+        
+        <!-- 评价内容 -->
+        <view class="rating-content-input">
+          <text class="content-label">详细评价</text>
+          <textarea 
+            class="content-textarea" 
+            placeholder="请描述您的服务体验（选填）"
+            value="{{ratingData.content}}"
+            bindinput="onRatingContentInput"
+            maxlength="200"
+          ></textarea>
+          <text class="word-count">{{ratingData.content.length}}/200</text>
+        </view>
+      </view>
+      
+      <view class="dialog-actions">
+        <button class="btn-rating-submit" bindtap="submitRating">提交评价</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-state" wx:if="{{!order}}">
+  <view class="loading-content">
+    <image class="loading-icon" src="/images/loading.gif"></image>
+    <text class="loading-text">加载订单详情中...</text>
+  </view>
+</view>

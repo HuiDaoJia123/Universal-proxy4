@@ -1,0 +1,12 @@
+<view class="card {{bgClass}}" bindtap="onCardTap">
+  <view class="card-icon">
+    <image src="{{iconPath}}" mode="aspectFit"></image>
+  </view>
+  <view class="card-content">
+    <view class="card-title">{{title}}</view>
+    <view class="card-desc">{{desc}}</view>
+  </view>
+  <view class="card-arrow" wx:if="{{showArrow}}">
+    <image src="/images/arrow-right.png" mode="aspectFit"></image>
+  </view>
+</view>

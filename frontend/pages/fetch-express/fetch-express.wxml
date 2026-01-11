@@ -1,0 +1,83 @@
+<!--pages/fetch-express/fetch-express.wxml-->
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">代取快递</text>
+    <text class="subtitle">2.5元/个，特别重的包裹价格另算</text>
+  </view>
+ 
+  <!-- 取件信息 -->
+  <view class="form-section">
+    <view class="form-item">
+      <text class="label">取件地址</text>
+      <input class="input" placeholder="请输入取件地址（如：南门菜鸟驿站）" value="{{pickupAddress}}" bindinput="onPickupAddressInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">取件码</text>
+      <input class="input" placeholder="请输入取件码" value="{{pickupCode}}" bindinput="onPickupCodeInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">快递公司</text>
+      <picker class="picker" mode="selector" range="{{expressCompanies}}" value="{{expressCompanyIndex}}" bindchange="onExpressCompanyChange">
+        <view class="picker-view">{{expressCompany || '请选择快递公司'}}</view>
+      </picker>
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">送达地址</text>
+      <input class="input" placeholder="请输入送达地址（如：3号楼201室）" value="{{deliveryAddress}}" bindinput="onDeliveryAddressInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">联系电话</text>
+      <input class="input" type="number" placeholder="请输入联系电话" value="{{phone}}" bindinput="onPhoneInput" />
+    </view>
+ 
+    <!-- 快递重量选择 -->
+    <view class="weight-section">
+      <text class="label">快递重量</text>
+      <view class="weight-options">
+        <view class="weight-option {{weight === 'small' ? 'active' : ''}}" data-weight="small" bindtap="selectWeight">
+          <text class="weight-text">小件</text>
+          <text class="weight-price">2.5元</text>
+        </view>
+        <view class="weight-option {{weight === 'medium' ? 'active' : ''}}" data-weight="medium" bindtap="selectWeight">
+          <text class="weight-text">中件</text>
+          <text class="weight-price">3.5元</text>
+        </view>
+        <view class="weight-option {{weight === 'large' ? 'active' : ''}}" data-weight="large" bindtap="selectWeight">
+          <text class="weight-text">大件</text>
+          <text class="weight-price">5元</text>
+        </view>
+        <view class="weight-option {{weight === 'heavy' ? 'active' : ''}}" data-weight="heavy" bindtap="selectWeight">
+          <text class="weight-text">特重件</text>
+          <text class="weight-price">另算</text>
+        </view>
+      </view>
+    </view>
+ 
+    <!-- 特殊说明 -->
+    <view class="form-item">
+      <text class="label">特殊说明</text>
+      <textarea class="textarea" placeholder="请说明快递的特殊情况（如：易碎品、需要验货等）" value="{{specialNote}}" bindinput="onSpecialNoteInput" maxlength="200" />
+      <text class="word-count">{{specialNote.length}}/200</text>
+    </view>
+ 
+    <!-- 价格显示 -->
+    <view class="price-section">
+      <view class="price-item">
+        <text class="price-label">服务费：</text>
+        <text class="price-value">¥{{serviceFee}}</text>
+      </view>
+      <view class="price-total">
+        <text class="total-label">总计：</text>
+        <text class="total-value">¥{{totalPrice}}</text>
+      </view>
+    </view>
+ 
+    <!-- 提交按钮 -->
+    <button class="submit-btn" disabled="{{!canSubmit}}" bindtap="submitOrder">提交订单</button>
+  </view>
+</view>

@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 地址列表 -->
+  <view class="address-list">
+    <block wx:for="{{addressList}}" wx:key="id">
+      <view class="address-item {{currentAddressId === item.id ? 'active' : ''}}">
+        <!-- 地址信息上半区域 - 可点击进入编辑 -->
+        <view class="address-top" bindtap="editAddress" data-id="{{item.id}}">
+          <view class="address-header">
+            <text class="recipient">{{item.recipient}}</text>
+            <text class="phone">{{item.phone}}</text>
+            <view class="default-tag" wx:if="{{item.isDefault}}">默认</view>
+          </view>
+          
+          <view class="address-content">
+            <text class="address-text">{{item.province}}{{item.city}}{{item.district}}{{item.detail}}</text>
+          </view>
+        </view>
+        
+        <!-- 操作按钮下半区域 - 整体不可点击，但按钮除外 -->
+        <view class="address-bottom">
+          <!-- 左侧：默认地址设置 -->
+          <view class="left-actions">
+            <label class="radio-label" catchtap="setDefault" data-id="{{item.id}}">
+              <radio class="address-radio" checked="{{item.isDefault}}"/>
+              <text class="radio-text">默认地址</text>
+            </label>
+          </view>
+          
+          <!-- 右侧：删除按钮 -->
+          <view class="right-actions">
+            <button class="btn-delete" catchtap="deleteAddress" data-id="{{item.id}}">删除</button>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{addressList.length === 0}}">
+      <icon class="empty-icon" type="warn" size="100" color="#ccc"></icon>
+      <text class="empty-text">暂无收货地址</text>
+      <text class="empty-desc">添加地址，让配送更便捷</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <button class="btn-add" bindtap="addNewAddress">+ 新增收货地址</button>
+  </view>
+
+  <!-- 选择地址时的确认按钮 -->
+  <view class="confirm-section" wx:if="{{isSelectMode}}">
+    <button class="btn-confirm" bindtap="confirmSelect">确认选择</button>
+  </view>
+</view>

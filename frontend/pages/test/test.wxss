@@ -1,0 +1,80 @@
+/* pages/test/test.wxss */
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  text-align: center;
+  margin: 30rpx 0;
+  color: #333;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+
+.btn {
+  padding: 20rpx;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+}
+
+.btn-primary {
+  background: #07c160;
+  color: white;
+}
+
+.btn-secondary {
+  background: #576b95;
+  color: white;
+}
+
+.result-box {
+  background: white;
+  padding: 30rpx;
+  border-radius: 10rpx;
+  margin-bottom: 40rpx;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.result-content {
+  font-size: 24rpx;
+  color: #666;
+  word-break: break-all;
+}
+
+.instructions {
+  background: white;
+  padding: 30rpx;
+  border-radius: 10rpx;
+}
+
+.instructions-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.instructions text {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+  line-height: 1.6;
+}

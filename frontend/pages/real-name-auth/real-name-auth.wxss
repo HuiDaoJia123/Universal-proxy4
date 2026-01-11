@@ -1,0 +1,592 @@
+/* 页面整体样式 */
+.auth-container {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: 40rpx;
+}
+
+/* 顶部导航 */
+.auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 32rpx;
+  background: white;
+  border-bottom: 1rpx solid #eee;
+}
+
+.nav-back {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.nav-placeholder {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+/* 认证状态卡片 */
+.status-card {
+  background: white;
+  margin: 24rpx 32rpx;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.status-card.not_started {
+  border-left: 8rpx solid #ff6b35;
+}
+
+.status-card.reviewing {
+  border-left: 8rpx solid #1890ff;
+}
+
+.status-card.success {
+  border-left: 8rpx solid #52c41a;
+}
+
+.status-card.failed {
+  border-left: 8rpx solid #ff4d4f;
+}
+
+.status-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-img {
+  width: 60rpx;
+  height: 60rpx;
+}
+
+.status-content {
+  flex: 1;
+}
+
+.status-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8rpx;
+}
+
+.status-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.status-badge {
+  padding: 8rpx 20rpx;
+  background: #f0f0f0;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.status-card.success .status-badge {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.status-card.failed .status-badge {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+/* 表单区域 */
+.auth-form {
+  background: white;
+  margin: 0 32rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.form-section {
+  padding: 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 24rpx;
+}
+
+.section-desc {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-label {
+  font-size: 28rpx;
+  color: #333;
+  width: 160rpx;
+}
+
+.item-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.item-input:focus {
+  border-bottom-color: #1890ff;
+}
+
+/* 上传区域 */
+.upload-single {
+  margin-top: 16rpx;
+}
+
+.upload-box {
+  width: 100%;
+  height: 300rpx;
+  border: 2rpx dashed #e0e0e0;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.upload-box.has-image {
+  border-color: #1890ff;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+}
+
+.upload-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-bottom: 20rpx;
+}
+
+.upload-text {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+
+.upload-hint {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+}
+
+.upload-tips {
+  margin-top: 24rpx;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+}
+
+.tip-title {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+
+.tip-item {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  line-height: 1.4;
+}
+
+/* 协议区域 */
+.agreement-section {
+  padding: 32rpx;
+}
+
+.agreement-item {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.agreement-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.agreement-link {
+  font-size: 26rpx;
+  color: #1890ff;
+}
+
+/* 提交按钮 */
+.submit-section {
+  padding: 0 32rpx 32rpx;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 88rpx;
+  background: #e0e0e0;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  transition: all 0.3s;
+}
+
+.submit-btn.active {
+  background: linear-gradient(135deg, #1890ff, #096dd9);
+  box-shadow: 0 4rpx 16rpx rgba(24, 144, 255, 0.3);
+}
+
+/* 信息卡片 */
+.info-card {
+  background: white;
+  margin: 24rpx 32rpx;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.info-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.info-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.status-tag {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.status-tag.success {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+/* 失败信息 */
+.failed-reason {
+  margin-bottom: 32rpx;
+  padding: 20rpx;
+  background: #fff2f0;
+  border-radius: 8rpx;
+}
+
+.reason-title {
+  display: block;
+  font-size: 28rpx;
+  color: #ff4d4f;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.reason-desc {
+  font-size: 26rpx;
+  color: #ff4d4f;
+  line-height: 1.5;
+}
+
+.suggestions {
+  padding: 20rpx;
+  background: #f6f6f6;
+  border-radius: 8rpx;
+}
+
+.suggest-title {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+}
+
+.suggest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.suggest-item {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* 审核中状态 */
+.reviewing-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+.reviewing-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 24rpx;
+}
+
+.reviewing-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+}
+
+.reviewing-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.reviewing-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.contact-tip {
+  text-align: center;
+  margin: 32rpx;
+}
+
+.tip-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.tip-link {
+  font-size: 26rpx;
+  color: #1890ff;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 24rpx;
+  padding: 0 32rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.action-btn.primary {
+  background: #1890ff;
+  color: white;
+}
+
+.action-btn.secondary {
+  background: #f5f5f5;
+  color: #666;
+  border: 1rpx solid #e0e0e0;
+}
+
+/* 协议弹窗 */
+.agreement-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.agreement-modal.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 20rpx;
+  width: 85%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+
+.agreement-modal.show .modal-content {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.modal-close {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-icon {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 32rpx;
+  max-height: 500rpx;
+}
+
+.agreement-content {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  padding: 0 32rpx 32rpx;
+}
+
+.modal-btn {
+  width: 100%;
+  height: 80rpx;
+  background: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+}

@@ -1,0 +1,223 @@
+<view class="page-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="navigateBack">
+      <image src="/assets/icons/back-arrow.png" class="back-icon"></image>
+    </view>
+    <text class="nav-title">编辑资料</text>
+    <view class="nav-empty"></view> <!-- 占位，使标题居中 -->
+  </view>
+
+  <!-- 表单内容 -->
+  <scroll-view class="form-scroll" scroll-y>
+    <!-- 头像上传 -->
+    <view class="form-section">
+      <view class="form-item avatar-item">
+        <text class="item-label">头像</text>
+        <view class="avatar-uploader" bindtap="chooseAvatar">
+          <image 
+            class="avatar-preview" 
+            src="{{formData.avatar_url || '/images/default-avatar.png'}}" 
+            mode="aspectFill"
+          ></image>
+          <view class="avatar-upload-btn">
+            <text class="upload-icon">📷</text>
+            <text class="upload-text">点击更换</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本信息区域 -->
+    <view class="form-section">
+      <text class="section-title">基本信息</text>
+      
+      <!-- 姓名（绑定单独方法） -->
+      <view class="form-item">
+        <text class="item-label">姓名</text>
+        <input
+          class="item-input"
+          placeholder="请输入姓名"
+          value="{{formData.name}}"
+          bindinput="handleNameInput"
+          maxlength="20"
+        />
+      </view>
+      
+      <!-- 性别 -->
+      <view class="form-item">
+        <text class="item-label">性别</text>
+        <view class="gender-group">
+          <view 
+            class="gender-btn {{formData.gender === 'male' ? 'active' : ''}}"
+            data-gender="male"
+            bindtap="selectGender"
+          >
+            <text class="gender-text">男</text>
+          </view>
+          <view 
+            class="gender-btn {{formData.gender === 'female' ? 'active' : ''}}"
+            data-gender="female"
+            bindtap="selectGender"
+          >
+            <text class="gender-text">女</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 手机号（绑定单独方法） -->
+      <view class="form-item">
+        <text class="item-label">手机号</text>
+        <input
+          class="item-input"
+          type="number"
+          placeholder="请输入11位手机号"
+          value="{{formData.phone}}"
+          bindinput="handlePhoneInput"
+          maxlength="11"
+        />
+      </view>
+    </view>
+
+    <!-- 学校信息区域 -->
+    <view class="form-section">
+      <text class="section-title">学校信息</text>
+      
+      <!-- 学校选择 -->
+      <view class="form-item">
+        <text class="item-label">学校</text>
+        <view class="picker-input" bindtap="showSchoolPicker">
+          <text class="picker-value {{formData.school ? '' : 'placeholder'}}">
+            {{formData.school || '请选择学校'}}
+          </text>
+          <image src="/assets/icons/arrow-down.png" class="picker-arrow"></image>
+        </view>
+      </view>
+      
+      <!-- 学院选择（选学校后显示） -->
+      <view class="form-item" wx:if="{{formData.school}}">
+        <text class="item-label">学院</text>
+        <view class="picker-input" bindtap="showCollegePicker">
+          <text class="picker-value {{formData.college ? '' : 'placeholder'}}">
+            {{formData.college || '请选择学院'}}
+          </text>
+          <image src="/assets/icons/arrow-down.png" class="picker-arrow"></image>
+        </view>
+      </view>
+      
+      <!-- 专业选择（选学院后显示） -->
+      <view class="form-item" wx:if="{{formData.college}}">
+        <text class="item-label">专业</text>
+        <view class="picker-input" bindtap="showMajorPicker">
+          <text class="picker-value {{formData.major ? '' : 'placeholder'}}">
+            {{formData.major || '请选择专业'}}
+          </text>
+          <image src="/assets/icons/arrow-down.png" class="picker-arrow"></image>
+        </view>
+      </view>
+      
+      <!-- 学号（绑定单独方法） -->
+      <view class="form-item">
+        <text class="item-label">学号</text>
+        <input
+          class="item-input"
+          placeholder="请输入学号"
+          value="{{formData.studentId}}"
+          bindinput="handleStudentIdInput"
+          maxlength="20"
+        />
+      </view>
+    </view>
+
+    <!-- 个人简介区域 -->
+    <view class="form-section">
+      <text class="section-title">个人简介</text>
+      <textarea
+        class="bio-input"
+        placeholder="简单介绍一下自己吧（最多200字）"
+        value="{{formData.bio}}"
+        bindinput="handleBioChange"
+        maxlength="200"
+      ></textarea>
+      <text class="bio-counter">{{formData.bio.length}}/200</text>
+    </view>
+
+    <!-- 保存按钮 -->
+    <view class="save-btn-container">
+      <button
+        class="save-btn {{formStatus.canSave ? 'enable' : 'disable'}}"
+        bindtap="saveProfile"
+        disabled="{{!formStatus.canSave || formStatus.isSaving}}"
+      >
+        {{formStatus.isSaving ? '保存中...' : '保存资料'}}
+      </button>
+    </view>
+  </scroll-view>
+
+  <!-- 学校选择器遮罩 -->
+  <view 
+    class="picker-mask"
+    wx:if="{{showSchoolSelector || showCollegeSelector || showMajorSelector}}"
+    bindtap="closeAllPickers"
+  ></view>
+
+  <!-- 学校选择器 -->
+  <view class="picker-panel" wx:if="{{showSchoolSelector}}">
+    <view class="picker-header">
+      <text class="picker-title">选择学校</text>
+      <text class="picker-close" bindtap="closeAllPickers">取消</text>
+    </view>
+    <scroll-view class="picker-list" scroll-y>
+      <view 
+        class="picker-item {{formData.school === item.name ? 'selected' : ''}}"
+        wx:for="{{schools}}"
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="selectSchool"
+      >
+        <text class="item-text">{{item.name}}</text>
+        <text class="selected-icon" wx:if="{{formData.school === item.name}}">✓</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 学院选择器 -->
+  <view class="picker-panel" wx:if="{{showCollegeSelector}}">
+    <view class="picker-header">
+      <text class="picker-title">选择学院</text>
+      <text class="picker-close" bindtap="closeAllPickers">取消</text>
+    </view>
+    <scroll-view class="picker-list" scroll-y>
+      <view 
+        class="picker-item {{formData.college === item.name ? 'selected' : ''}}"
+        wx:for="{{currentColleges}}"
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="selectCollege"
+      >
+        <text class="item-text">{{item.name}}</text>
+        <text class="selected-icon" wx:if="{{formData.college === item.name}}">✓</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 专业选择器 -->
+  <view class="picker-panel" wx:if="{{showMajorSelector}}">
+    <view class="picker-header">
+      <text class="picker-title">选择专业</text>
+      <text class="picker-close" bindtap="closeAllPickers">取消</text>
+    </view>
+    <scroll-view class="picker-list" scroll-y>
+      <view 
+        class="picker-item {{formData.major === item ? 'selected' : ''}}"
+        wx:for="{{currentMajors}}"
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="selectMajor"
+      >
+        <text class="item-text">{{item}}</text>
+        <text class="selected-icon" wx:if="{{formData.major === item}}">✓</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

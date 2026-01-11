@@ -1,0 +1,253 @@
+<!-- frontend/pages/settings/settings.wxml -->
+<view class="container theme-background">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">{{texts.settings.title}}</text>
+  </view>
+ 
+  <!-- 账号与安全 -->
+  <view class="section">
+    <view class="section-title">{{texts.settings.account}}</view>
+    <view class="menu-list">
+      <view class="menu-item theme-surface theme-border" bindtap="navigateToEditProfile">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-profile.png"></image>
+          <text class="menu-text">{{texts.settings.profile}}</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-desc">{{texts.settings.profileDesc || '修改资料'}}</text>
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="navigateToAccountSecurity">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-security.png"></image>
+          <text class="menu-text">{{texts.settings.security}}</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-desc">{{texts.settings.securityDesc || '修改密码等'}}</text>
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="navigateToRealName">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-verify.png"></image>
+          <text class="menu-text">{{texts.settings.verification}}</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-desc {{realNameVerified ? 'verified' : 'unverified'}}">
+            {{realNameVerified ? texts.auth.verified : texts.auth.unverified}}
+          </text>
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 通知设置 -->
+  <view class="section">
+    <view class="section-title">{{texts.settings.notifications}}</view>
+    <view class="menu-list">
+      <view class="menu-item theme-surface theme-border">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/order.png"></image>
+          <text class="menu-text">{{texts.settings.orderNotify}}</text>
+        </view>
+        <view class="menu-right">
+          <switch class="switch" checked="{{notifySettings.order}}" bindchange="toggleOrderNotify" />
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-message.png"></image>
+          <text class="menu-text">{{texts.settings.systemMessage}}</text>
+        </view>
+        <view class="menu-right">
+          <switch class="switch" checked="{{notifySettings.system}}" bindchange="toggleSystemNotify" />
+        </view>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 隐私设置 -->
+  <view class="section">
+    <view class="section-title">{{texts.settings.privacy}}</view>
+    <view class="menu-list">
+      <view class="menu-item theme-surface theme-border">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-privacy.png"></image>
+          <text class="menu-text">{{texts.settings.profileProtect}}</text>
+        </view>
+        <view class="menu-right">
+          <switch class="switch" checked="{{privacySettings.profileProtect}}" bindchange="toggleProfileProtect" />
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-location.png"></image>
+          <text class="menu-text">{{texts.settings.locationInfo}}</text>
+        </view>
+        <view class="menu-right">
+          <switch class="switch" checked="{{privacySettings.location}}" bindchange="toggleLocation" />
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="navigateToBlacklist">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-block.png"></image>
+          <text class="menu-text">{{texts.settings.blacklist}}</text>
+        </view>
+        <view class="menu-right">
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="clearCache">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-cache.png"></image>
+          <text class="menu-text">{{texts.settings.clearCache}}</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-desc">{{cacheSize}}</text>
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 通用设置 -->
+  <view class="section">
+    <view class="section-title">{{texts.settings.general}}</view>
+    <view class="menu-list">
+      <view class="menu-item theme-surface theme-border" bindtap="changeLanguage">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-language.png"></image>
+          <text class="menu-text">{{texts.settings.multiLanguage}}</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-desc">{{language}}</text>
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="changeTheme">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-theme.png"></image>
+          <text class="menu-text">{{texts.settings.theme}}</text>
+        </view>
+        <view class="menu-right">
+          <text class="menu-desc">{{theme}}</text>
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="navigateToFeedback">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-feedback.png"></image>
+          <text class="menu-text">{{texts.settings.feedback}}</text>
+        </view>
+        <view class="menu-right">
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+ 
+      <view class="menu-item theme-surface theme-border" bindtap="navigateToAbout">
+        <view class="menu-left">
+          <image class="menu-icon" src="/images/icon-about.png"></image>
+          <text class="menu-text">{{texts.settings.about}}</text>
+        </view>
+        <view class="menu-right">
+          <icon class="menu-arrow" type="clear" size="16"></icon>
+        </view>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <button class="logout-btn theme-primary theme-surface" bindtap="logout">{{texts.settings.logout}}</button>
+  </view>
+</view>
+
+<!-- 骑手自动接单设置 -->
+<view class="section">
+  <view class="section-title">骑手设置</view>
+  
+  <view class="setting-item">
+    <text class="item-label">自动接单</text>
+    <switch 
+      checked="{{riderSettings.autoGrabEnabled}}" 
+      bindchange="toggleAutoGrab"
+      color="#1E90FF"
+    />
+  </view>
+  
+  <view class="setting-item">
+    <text class="item-label">每小时最大接单数</text>
+    <view class="counter">
+      <button 
+        size="mini" 
+        bindtap="onMaxOrdersChange" 
+        data-type="decrease"
+      >-</button>
+      <text class="counter-value">{{riderSettings.maxOrders}}</text>
+      <button 
+        size="mini" 
+        bindtap="onMaxOrdersChange" 
+        data-type="increase"
+      >+</button>
+    </view>
+  </view>
+  
+  <view class="setting-item">
+    <view class="item-label">
+      <text>可接订单分类</text>
+      <text class="hint">（可多选）</text>
+    </view>
+  </view>
+  
+  <view class="categories-grid">
+    <block wx:for="{{riderSettings.categories}}" wx:key="id">
+      <view 
+        class="category-item {{isSelectedCategory(item.id) ? 'selected' : ''}}"
+        bindtap="toggleCategory"
+        data-id="{{item.id}}"
+      >
+        {{item.name}}
+      </view>
+    </block>
+  </view>
+  
+  <!-- 接单统计 -->
+  <view class="stats-card">
+    <view class="stats-row">
+      <text class="stats-label">1小时内接单数</text>
+      <text class="stats-value">{{grabStats.totalGrabs}}</text>
+    </view>
+    <view class="stats-row">
+      <text class="stats-label">未完成订单数</text>
+      <text class="stats-value {{grabStats.incompleteCount >= 20 ? 'warning' : ''}}">
+        {{grabStats.incompleteCount}}
+      </text>
+    </view>
+    <view class="stats-row">
+      <text class="stats-label">状态</text>
+      <text class="stats-value {{grabStats.canGrab ? 'success' : 'error'}}">
+        {{grabStats.canGrab ? '可接单' : '已满限制'}}
+      </text>
+    </view>
+  </view>
+  
+  <!-- 手动触发按钮 -->
+  <button 
+    class="grab-btn {{!grabStats.canGrab ? 'disabled' : ''}}" 
+    bindtap="triggerAutoGrab"
+    disabled="{{!grabStats.canGrab}}"
+  >
+    立即接单
+  </button>
+</view>

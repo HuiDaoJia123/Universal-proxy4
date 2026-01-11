@@ -1,0 +1,126 @@
+<view class="container">
+  <!-- 申请成为刷客入口 -->
+  <view class="apply-brusher-entry" bindtap="goToApplyBrusher">
+    <text>想成为刷客赚取零花钱？</text>
+    <button class="apply-btn">申请成为刷客 (人工审核)</button>
+  </view>
+
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">刷课服务</text>
+    <text class="subtitle">专业刷课，安全高效，30元/门起</text>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <view class="section-title">课程信息</view>
+    
+    <view class="form-item">
+      <text class="label required">科目名称</text>
+      <input class="input" placeholder="请输入需要刷的科目名称" data-field="subject" bindinput="handleInput" value="{{formData.subject}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">您的姓名</text>
+      <input class="input" placeholder="请输入您的真实姓名" data-field="studentName" bindinput="handleInput" value="{{formData.studentName}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">学号</text>
+      <input class="input" placeholder="请输入您的学号" data-field="studentId" bindinput="handleInput" value="{{formData.studentId}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">学校名称</text>
+      <input class="input" placeholder="请输入您的学校名称" data-field="school" bindinput="handleInput" value="{{formData.school}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">手机号码</text>
+      <input class="input" type="number" placeholder="请输入您的手机号码" data-field="phone" bindinput="handleInput" value="{{formData.phone}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">平台账号</text>
+      <input class="input" placeholder="请输入学习平台账号" data-field="platformAccount" bindinput="handleInput" value="{{formData.platformAccount}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label required">平台密码</text>
+      <input class="input" type="password" placeholder="请输入学习平台密码" data-field="platformPassword" bindinput="handleInput" value="{{formData.platformPassword}}" />
+    </view>
+  </view>
+
+  <!-- 附加服务 -->
+  <view class="additional-section">
+    <view class="section-title">附加服务</view>
+    
+    <view class="additional-options">
+      <view class="additional-item {{additionalServices.exam ? 'active' : ''}}" data-service="exam" bindtap="toggleAdditionalService">
+        <text class="service-name">包含考试</text>
+        <text class="service-price">+10元</text>
+      </view>
+
+      <view class="additional-item {{additionalServices.homework ? 'active' : ''}}" data-service="homework" bindtap="toggleAdditionalService">
+        <text class="service-name">包含作业</text>
+        <text class="service-price">+8元</text>
+      </view>
+
+      <view class="additional-item {{additionalServices.discussion ? 'active' : ''}}" data-service="discussion" bindtap="toggleAdditionalService">
+        <text class="service-name">包含讨论</text>
+        <text class="service-price">+5元</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加价模块 -->
+  <view class="price-boost-section">
+    <view class="section-title">
+      <text>加价抢单</text>
+      <text class="tip-text">加价更容易找到刷客</text>
+    </view>
+    
+    <view class="boost-options">
+      <block wx:for="{{boostOptions}}" wx:key="*this">
+        <view class="boost-option {{priceBoost === item ? 'active' : ''}}" data-boost="{{item}}" bindtap="selectPriceBoost">
+          <text class="boost-text">{{item === 0 ? '不加价' : '+' + item + '元'}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 备注信息 -->
+  <view class="remark-section">
+    <view class="section-title">备注信息</view>
+    <textarea class="textarea" placeholder="请输入特殊要求（如：截止时间、具体任务等）" data-field="remark" bindinput="handleInput" value="{{formData.remark}}" maxlength="300" />
+    <text class="word-count">{{formData.remark.length}}/300</text>
+  </view>
+
+  <!-- 价格总计 -->
+  <view class="price-section">
+    <view class="price-detail">
+      <view class="price-item">
+        <text class="price-label">基础费用：</text>
+        <text class="price-value">¥{{basePrice.toFixed(2)}}</text>
+      </view>
+      <view class="price-item" wx:if="{{additionalPrice > 0}}">
+        <text class="price-label">附加服务：</text>
+        <text class="price-value">+¥{{additionalPrice.toFixed(2)}}</text>
+      </view>
+      <view class="price-item" wx:if="{{priceBoost > 0}}">
+        <text class="price-label">加价抢单：</text>
+        <text class="price-value">+¥{{priceBoost.toFixed(2)}}</text>
+      </view>
+      <view class="price-total">
+        <text class="total-label">总计：</text>
+        <text class="total-value">¥{{totalPrice.toFixed(2)}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <button class="btn-contact" bindtap="contactCustomerService">联系客服</button>
+    <button class="btn-submit" bindtap="submitOrder" disabled="{{!canSubmit}}">提交订单</button>
+  </view>
+</view>

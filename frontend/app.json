@@ -1,0 +1,81 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/diandan/diandan",
+    "pages/my/my",
+    "pages/rider-apply/rider-apply",
+    "pages/supermarket/supermarket",
+    "pages/fetch-express/fetch-express",
+    "pages/takeout-fetch/takeout-fetch",
+    "pages/substitute-class/substitute-class",
+    "pages/edit-profile/edit-profile",
+    "pages/settings/settings",
+    "pages/customer-service/customer-service",
+    "pages/order-chat/order-chat",
+    "pages/address-management/address-management",
+    "pages/address-edit/address-edit",
+    "pages/course-brush/course-brush",
+    "pages/other-services/other-services",
+    "pages/login/login",
+    "pages/order-detail/order-detail",
+    "pages/wallet/wallet",
+    "pages/rating/rating",
+    "pages/real-name-auth/real-name-auth",
+    "pages/feedback/feedback",
+    "pages/about/about",
+    "pages/apply-audit/apply-audit",
+    "pages/notification-center/notification-center",
+    "pages/welcome/welcome",
+    "pages/test/test",
+    "pages/blacklist-management/blacklist-management",
+    "pages/reward-task/reward-task",
+    "pages/apply-substitute/apply-substitute",
+    "pages/apply-brusher/apply-brusher",
+    "pages/chat/chat",
+    "pages/agreement/agreement",
+    "pages/announcement/announcement"
+
+
+  
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1E90FF",
+    "navigationBarTitleText": "校园生活助手",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": false
+  },
+  
+  "usingComponents": {
+    "van-count-down": "@vant/weapp/count-down/index"
+  },
+  
+  "tabBar": {
+    "color": "#888",
+    "selectedColor": "#1E90FF",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "主页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/diandan/diandan",
+        "text": "订单",
+        "iconPath": "images/order.png",
+        "selectedIconPath": "images/order-active.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "images/my.png",
+        "selectedIconPath": "images/my-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

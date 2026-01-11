@@ -1,0 +1,237 @@
+<!--pages/reward-task/reward-task.wxml-->
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">悬赏任务</text>
+    <text class="subtitle">发布悬赏任务，快速接单，诚信服务</text>
+  </view>
+ 
+  <!-- 申请成为服务者入口 -->
+  <view class="apply-service-entry" bindtap="goToApplyService">
+    <text>想成为服务者赚取零花钱？</text>
+    <button class="apply-btn">申请成为服务者 (人工审核)</button>
+  </view>
+ 
+  <!-- 服务类型选择 -->
+  <view class="service-type-section">
+    <view class="section-title">选择任务类型</view>
+    <view class="service-type-options">
+      <view class="service-type-item {{selectedService === 'substitute' ? 'active' : ''}}" data-service="substitute" bindtap="selectServiceType">
+        <view class="service-icon">
+          <image src="/images/class-icon.png" mode="aspectFit"></image>
+        </view>
+        <text class="service-name">代课服务</text>
+        <text class="service-price">25元/节</text>
+        <text class="service-desc">专业代课，诚信可靠</text>
+      </view>
+      <view class="service-type-item {{selectedService === 'brush' ? 'active' : ''}}" data-service="brush" bindtap="selectServiceType">
+        <view class="service-icon">
+          <image src="/images/study-icon.png" mode="aspectFit"></image>
+        </view>
+        <text class="service-name">刷课服务</text>
+        <text class="service-price">3.5元/科</text>
+        <text class="service-desc">专业刷课，安全高效</text>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 代课服务表单 -->
+  <view class="form-section" wx:if="{{selectedService === 'substitute'}}">
+    <view class="section-title">代课信息</view>
+    
+    <view class="form-item">
+      <text class="label required">教学楼</text>
+      <input class="input" placeholder="请输入教学楼名称" value="{{substituteData.building}}" data-field="building" bindinput="onSubstituteInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">教室号</text>
+      <input class="input" placeholder="请输入教室号" value="{{substituteData.classroom}}" data-field="classroom" bindinput="onSubstituteInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">科目名称</text>
+      <input class="input" placeholder="请输入科目名称" value="{{substituteData.subject}}" data-field="subject" bindinput="onSubstituteInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">您的姓名</text>
+      <input class="input" placeholder="请输入您的真实姓名" value="{{substituteData.studentName}}" data-field="studentName" bindinput="onSubstituteInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">学号</text>
+      <input class="input" placeholder="请输入学号" value="{{substituteData.studentId}}" data-field="studentId" bindinput="onSubstituteInput" />
+    </view>
+ 
+    <!-- 代课时间选择 -->
+    <view class="time-section">
+      <view class="section-title">代课时间</view>
+      <view class="time-options">
+        <block wx:for="{{classTimes}}" wx:key="id">
+          <view class="time-option {{selectedTime === item.id ? 'active' : ''}}" data-time="{{item}}" bindtap="selectTime">
+            <text class="time-range">{{item.range}}</text>
+            <text class="time-duration">{{item.duration}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+ 
+    <!-- 代课附加服务 -->
+    <view class="additional-section">
+      <view class="section-title">附加服务</view>
+      <view class="additional-options">
+        <view class="additional-item {{substituteAdditional.noteTaking ? 'active' : ''}}" data-service="noteTaking" bindtap="toggleSubstituteAdditional">
+          <text class="service-name">课堂笔记</text>
+          <text class="service-price">+5元</text>
+        </view>
+        <view class="additional-item {{substituteAdditional.homework ? 'active' : ''}}" data-service="homework" bindtap="toggleSubstituteAdditional">
+          <text class="service-name">代写作业</text>
+          <text class="service-price">+10元</text>
+        </view>
+        <view class="additional-item {{substituteAdditional.presentation ? 'active' : ''}}" data-service="presentation" bindtap="toggleSubstituteAdditional">
+          <text class="service-name">演讲内容</text>
+          <text class="service-price">+15元</text>
+        </view>
+        <view class="additional-item {{substituteAdditional.answering ? 'active' : ''}}" data-service="answering" bindtap="toggleSubstituteAdditional">
+          <text class="service-name">课堂回答问题</text>
+          <text class="service-price">+8元</text>
+        </view>
+      </view>
+    </view>
+ 
+    <!-- 代课备注 -->
+    <view class="remark-section">
+      <view class="section-title">备注信息</view>
+      <textarea class="textarea" placeholder="请说明课程的特殊要求（如：固定座位、点名方式、课程内容等）" value="{{substituteData.remark}}" data-field="remark" bindinput="onSubstituteInput" maxlength="300" />
+      <text class="word-count">{{substituteData.remark.length}}/300</text>
+    </view>
+ 
+    <!-- 代课监控说明 -->
+    <view class="monitor-section">
+      <view class="section-title">诚信监控说明</view>
+      <view class="monitor-content">
+        <text class="monitor-item">• 代课全程90分钟，不允许中途离开</text>
+        <text class="monitor-item">• 上下课时需进行实时拍照验证</text>
+        <text class="monitor-item">• 拍照有6分钟缓冲时间，超时将影响信用</text>
+        <text class="monitor-item">• 所有照片实时发送给您，确保诚信服务</text>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 刷课服务表单 -->
+  <view class="form-section" wx:if="{{selectedService === 'brush'}}">
+    <view class="section-title">刷课信息</view>
+    
+    <view class="form-item">
+      <text class="label required">科目名称</text>
+      <input class="input" placeholder="请输入需要刷的科目名称" value="{{brushData.subject}}" data-field="subject" bindinput="onBrushInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">您的姓名</text>
+      <input class="input" placeholder="请输入您的真实姓名" value="{{brushData.studentName}}" data-field="studentName" bindinput="onBrushInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">学号</text>
+      <input class="input" placeholder="请输入您的学号" value="{{brushData.studentId}}" data-field="studentId" bindinput="onBrushInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">学校名称</text>
+      <input class="input" placeholder="请输入您的学校名称" value="{{brushData.school}}" data-field="school" bindinput="onBrushInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">手机号码</text>
+      <input class="input" type="number" placeholder="请输入您的手机号码" value="{{brushData.phone}}" data-field="phone" bindinput="onBrushInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">平台账号</text>
+      <input class="input" placeholder="请输入学习平台账号" value="{{brushData.platformAccount}}" data-field="platformAccount" bindinput="onBrushInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label required">平台密码</text>
+      <input class="input" type="password" placeholder="请输入学习平台密码" value="{{brushData.platformPassword}}" data-field="platformPassword" bindinput="onBrushInput" />
+    </view>
+ 
+    <!-- 刷课附加服务 -->
+    <view class="additional-section">
+      <view class="section-title">附加服务</view>
+      <view class="additional-options">
+        <view class="additional-item {{brushAdditional.exam ? 'active' : ''}}" data-service="exam" bindtap="toggleBrushAdditional">
+          <text class="service-name">包含考试</text>
+          <text class="service-price">+10元</text>
+        </view>
+        <view class="additional-item {{brushAdditional.homework ? 'active' : ''}}" data-service="homework" bindtap="toggleBrushAdditional">
+          <text class="service-name">包含作业</text>
+          <text class="service-price">+8元</text>
+        </view>
+        <view class="additional-item {{brushAdditional.discussion ? 'active' : ''}}" data-service="discussion" bindtap="toggleBrushAdditional">
+          <text class="service-name">包含讨论</text>
+          <text class="service-price">+5元</text>
+        </view>
+      </view>
+    </view>
+ 
+    <!-- 刷课备注 -->
+    <view class="remark-section">
+      <view class="section-title">备注信息</view>
+      <textarea class="textarea" placeholder="请输入特殊要求（如：截止时间、具体任务等）" value="{{brushData.remark}}" data-field="remark" bindinput="onBrushInput" maxlength="300" />
+      <text class="word-count">{{brushData.remark.length}}/300</text>
+    </view>
+  </view>
+ 
+  <!-- 加价抢单 -->
+  <view class="price-boost-section" wx:if="{{selectedService}}">
+    <view class="section-title">
+      <text>加价抢单</text>
+      <text class="tip-text">加价更容易找到服务者</text>
+    </view>
+    <view class="boost-options">
+      <view class="boost-option {{priceBoost === 0 ? 'active' : ''}}" data-boost="0" bindtap="selectPriceBoost">
+        <text class="boost-text">不加价</text>
+      </view>
+      <view class="boost-option {{priceBoost === 5 ? 'active' : ''}}" data-boost="5" bindtap="selectPriceBoost">
+        <text class="boost-text">+5元</text>
+      </view>
+      <view class="boost-option {{priceBoost === 10 ? 'active' : ''}}" data-boost="10" bindtap="selectPriceBoost">
+        <text class="boost-text">+10元</text>
+      </view>
+      <view class="boost-option {{priceBoost === 15 ? 'active' : ''}}" data-boost="15" bindtap="selectPriceBoost">
+        <text class="boost-text">+15元</text>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 价格总计 -->
+  <view class="price-section" wx:if="{{selectedService && totalPrice > 0}}">
+    <view class="price-detail">
+      <view class="price-item">
+        <text class="price-label">基础费用：</text>
+        <text class="price-value">¥{{basePrice.toFixed(2)}}</text>
+      </view>
+      <view class="price-item" wx:if="{{additionalPrice > 0}}">
+        <text class="price-label">附加服务：</text>
+        <text class="price-value">+¥{{additionalPrice.toFixed(2)}}</text>
+      </view>
+      <view class="price-item" wx:if="{{priceBoost > 0}}">
+        <text class="price-label">加价抢单：</text>
+        <text class="price-value">+¥{{priceBoost.toFixed(2)}}</text>
+      </view>
+      <view class="price-total">
+        <text class="total-label">总计：</text>
+        <text class="total-value">¥{{totalPrice.toFixed(2)}}</text>
+      </view>
+    </view>
+  </view>
+ 
+  <!-- 底部按钮 -->
+  <view class="bottom-actions" wx:if="{{selectedService}}">
+    <button class="btn-contact" bindtap="contactCustomerService">联系客服</button>
+    <button class="btn-submit" bindtap="submitOrder" disabled="{{!canSubmit}}">发布悬赏</button>
+  </view>
+</view>

@@ -1,0 +1,117 @@
+<!--pages/notification-center/notification-center.wxml-->
+<view class="container">
+  <!-- 标签栏 -->
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" 
+          data-index="0" bindtap="onTabTap">
+      <text>通知</text>
+      <view wx:if="{{unreadCount > 0}}" class="tab-badge">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" 
+          data-index="1" bindtap="onTabTap">
+      <text>消息</text>
+    </view>
+  </view>
+ 
+  <!-- 通知内容 -->
+  <view class="content-area">
+    <!-- 通知列表 -->
+    <view wx:if="{{currentTab === 0}}" class="notification-list">
+      <!-- 操作栏 -->
+      <view class="action-bar">
+        <view class="unread-info">
+          <text wx:if="{{unreadCount > 0}}" class="unread-text">{{unreadCount}}条未读</text>
+        </view>
+        <view class="action-buttons">
+          <button wx:if="{{unreadCount > 0}}" class="mark-read-btn" bindtap="onMarkAllRead">全部已读</button>
+          <button wx:if="{{notifications.length > 0}}" class="clear-btn" bindtap="onClearAllTap">清除全部</button>
+        </view>
+      </view>
+ 
+      <!-- 通知项 -->
+      <block wx:for="{{notifications}}" wx:key="id">
+        <view class="notification-item {{item.status === 'unread' ? 'unread' : ''}}" 
+              data-index="{{index}}" bindtap="onNotificationTap">
+          <!-- 通知图标 -->
+          <view class="notify-icon">
+            <view wx:if="{{item.type === 'audit_result'}}" class="icon-audit">
+              <text class="iconfont icon-shenhe"></text>
+            </view>
+            <view wx:elif="{{item.type === 'order_status'}}" class="icon-order">
+              <text class="iconfont icon-order"></text>
+            </view>
+            <view wx:elif="{{item.type === 'payment'}}" class="icon-payment">
+              <text class="iconfont icon-wallet"></text>
+            </view>
+            <view wx:elif="{{item.type === 'chat_message'}}" class="icon-chat">
+              <text class="iconfont icon-message"></text>
+            </view>
+            <view wx:else class="icon-system">
+              <text class="iconfont icon-notice"></text>
+            </view>
+          </view>
+ 
+          <!-- 通知内容 -->
+          <view class="notify-content">
+            <view class="notify-header">
+              <text class="notify-title">{{item.title}}</text>
+              <text class="notify-time">{{item.created_at}}</text>
+            </view>
+            <text class="notify-desc">{{item.content}}</text>
+          </view>
+ 
+          <!-- 未读标记 -->
+          <view wx:if="{{item.status === 'unread'}}" class="unread-dot"></view>
+        </view>
+      </block>
+ 
+      <!-- 空状态 -->
+      <view wx:if="{{notifications.length === 0 && !loading}}" class="empty-notify">
+        <image src="/images/empty-notify.png" mode="aspectFit" class="empty-img"></image>
+        <text class="empty-text">暂无通知</text>
+      </view>
+ 
+      <!-- 加载状态 -->
+      <view wx:if="{{loading}}" class="loading">
+        <text>加载中...</text>
+      </view>
+    </view>
+ 
+    <!-- 消息列表 -->
+    <view wx:if="{{currentTab === 1}}" class="conversation-list">
+      <block wx:for="{{conversations}}" wx:key="id">
+        <view class="conversation-item" data-index="{{index}}" bindtap="onConversationTap">
+          <view class="avatar">
+            <image src="/images/default-avatar.png" class="avatar-img"></image>
+          </view>
+          
+          <view class="conversation-content">
+            <view class="conversation-header">
+              <text class="conversation-title">{{item.title}}</text>
+              <text class="conversation-time">{{item.last_message.time}}</text>
+            </view>
+            
+            <view class="conversation-desc">
+              <text wx:if="{{item.last_message}}" class="last-message">
+                {{item.last_message.sender}}: {{item.last_message.content}}
+              </text>
+              <text wx:else class="no-message">暂无消息</text>
+            </view>
+          </view>
+ 
+          <view class="conversation-right">
+            <text wx:if="{{item.unread_count > 0}}" class="unread-count">
+              {{item.unread_count > 99 ? '99+' : item.unread_count}}
+            </text>
+          </view>
+        </view>
+      </block>
+ 
+      <!-- 空状态 -->
+      <view wx:if="{{conversations.length === 0}}" class="empty-conversation">
+        <image src="/images/empty-message.png" mode="aspectFit" class="empty-img"></image>
+        <text class="empty-text">暂无消息</text>
+      </view>
+    </view>
+  </view>
+</view>

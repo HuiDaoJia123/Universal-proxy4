@@ -1,0 +1,42 @@
+<!--pages/chat/chat.wxml-->
+<view class="container">
+  <!-- 消息列表 -->
+  <scroll-view class="message-list" scroll-y="true" scroll-into-view="{{scrollToMessage}}">
+    <block wx:for="{{messages}}" wx:key="id">
+      <view class="message-item" id="message-{{index}}">
+        <!-- 时间分隔线 -->
+        <view wx:if="{{index === 0 || messages[index-1].created_at !== item.created_at}}" 
+              class="time-divider">
+          <text class="time-text">{{item.created_at}}</text>
+        </view>
+        
+        <!-- 消息内容 -->
+        <view class="message-content {{item.sender === '我' ? 'self' : 'other'}}">
+          <view class="avatar">
+            <image src="/images/default-avatar.png" class="avatar-img"></image>
+          </view>
+          
+          <view class="message-bubble">
+            <text class="message-text">{{item.content}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 加载状态 -->
+    <view wx:if="{{isLoading}}" class="loading-messages">
+      <text>加载消息中...</text>
+    </view>
+  </scroll-view>
+ 
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <input class="message-input" 
+           placeholder="输入消息..." 
+           value="{{inputText}}"
+           bindinput="onInputChange"
+           confirm-type="send"
+           bindconfirm="onSendTap" />
+    <button class="send-btn" bindtap="onSendTap">发送</button>
+  </view>
+</view>

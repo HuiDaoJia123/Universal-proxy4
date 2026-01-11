@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "学生认证",
+  "navigationStyle": "custom",
+  "backgroundColor": "#f8f9fa",
+  "enablePullDownRefresh": false,
+  "usingComponents": {}
+}

@@ -1,0 +1,418 @@
+/* pages/reward-task/reward-task.wxss */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+ 
+/* 页面头部 */
+.header-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40rpx 30rpx;
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+ 
+.header-section .title {
+  font-size: 36rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10rpx;
+}
+ 
+.header-section .subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+  display: block;
+}
+ 
+/* 申请服务者入口 */
+.apply-service-entry {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  border-radius: 15rpx;
+  padding: 25rpx;
+  margin-bottom: 30rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ 
+.apply-service-entry text {
+  font-size: 28rpx;
+  color: #2d3436;
+  margin-bottom: 15rpx;
+}
+ 
+.apply-btn {
+  background: white;
+  color: #ff6348;
+  border: none;
+  border-radius: 25rpx;
+  padding: 12rpx 30rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(255, 99, 72, 0.2);
+}
+ 
+/* 服务类型选择 */
+.service-type-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+ 
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+ 
+.service-type-options {
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.service-type-item {
+  width: 48%;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 15rpx;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  transition: all 0.3s;
+}
+ 
+.service-type-item.active {
+  border-color: #4A90E2;
+  background: #f0f8ff;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(74, 144, 226, 0.2);
+}
+ 
+.service-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin: 0 auto 20rpx;
+}
+ 
+.service-icon image {
+  width: 100%;
+  height: 100%;
+}
+ 
+.service-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+ 
+.service-price {
+  font-size: 26rpx;
+  color: #ff6b6b;
+  display: block;
+  margin-bottom: 10rpx;
+}
+ 
+.service-desc {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+ 
+/* 表单区域 */
+.form-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+ 
+.form-item {
+  margin-bottom: 30rpx;
+}
+ 
+.label {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 15rpx;
+}
+ 
+.label.required::after {
+  content: ' *';
+  color: #ff6b6b;
+}
+ 
+.input {
+  width: 100%;
+  height: 80rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+ 
+.input:focus {
+  border-color: #4A90E2;
+}
+ 
+/* 时间选择 */
+.time-section {
+  margin-top: 30rpx;
+}
+ 
+.time-options {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10rpx;
+}
+ 
+.time-option {
+  width: calc(33.33% - 20rpx);
+  margin: 10rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  padding: 20rpx 10rpx;
+  text-align: center;
+  transition: all 0.3s;
+}
+ 
+.time-option.active {
+  border-color: #4A90E2;
+  background: #f0f8ff;
+}
+ 
+.time-range {
+  font-size: 26rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 5rpx;
+}
+ 
+.time-duration {
+  font-size: 22rpx;
+  color: #666;
+  display: block;
+}
+ 
+/* 附加服务 */
+.additional-section {
+  margin-top: 30rpx;
+}
+ 
+.additional-options {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10rpx;
+}
+ 
+.additional-item {
+  width: calc(50% - 20rpx);
+  margin: 10rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s;
+}
+ 
+.additional-item.active {
+  border-color: #4A90E2;
+  background: #f0f8ff;
+}
+ 
+/* 备注区域 */
+.remark-section {
+  margin-top: 30rpx;
+}
+ 
+.textarea {
+  width: 100%;
+  height: 120rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+ 
+.textarea:focus {
+  border-color: #4A90E2;
+}
+ 
+.word-count {
+  font-size: 24rpx;
+  color: #999;
+  text-align: right;
+  display: block;
+  margin-top: 10rpx;
+}
+ 
+/* 监控说明 */
+.monitor-section {
+  margin-top: 30rpx;
+}
+ 
+.monitor-content {
+  background: #fff9e6;
+  border-radius: 10rpx;
+  padding: 20rpx;
+}
+ 
+.monitor-item {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 10rpx;
+  line-height: 1.5;
+}
+ 
+.monitor-item:last-child {
+  margin-bottom: 0;
+}
+ 
+/* 加价模块 */
+.price-boost-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+ 
+.tip-text {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 20rpx;
+}
+ 
+.boost-options {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+ 
+.boost-option {
+  flex: 1;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  padding: 20rpx 10rpx;
+  text-align: center;
+  margin: 0 5rpx;
+  transition: all 0.3s;
+}
+ 
+.boost-option:first-child {
+  margin-left: 0;
+}
+ 
+.boost-option:last-child {
+  margin-right: 0;
+}
+ 
+.boost-option.active {
+  border-color: #4A90E2;
+  background: #f0f8ff;
+}
+ 
+.boost-text {
+  font-size: 26rpx;
+  color: #333;
+}
+ 
+/* 价格区域 */
+.price-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+ 
+.price-detail {
+  border-top: 1rpx solid #e0e0e0;
+  padding-top: 20rpx;
+}
+ 
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+ 
+.price-label {
+  font-size: 28rpx;
+  color: #666;
+}
+ 
+.price-value {
+  font-size: 28rpx;
+  color: #333;
+}
+ 
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #e0e0e0;
+}
+ 
+.total-label {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+ 
+.total-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff6b6b;
+}
+ 
+/* 底部按钮 */
+.bottom-actions {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 20rpx 40rpx;
+}
+ 
+.btn-contact {
+  flex: 1;
+  height: 88rpx;
+  background: white;
+  color: #4A90E2;
+  border: 2rpx solid #4A90E2;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.btn-submit {
+  flex: 2;
+  height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.btn-submit[disabled] {
+  background: #ccc;
+  opacity: 0.6;
+}

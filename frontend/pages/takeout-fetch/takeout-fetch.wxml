@@ -1,0 +1,74 @@
+<!--pages/takeout-fetch/takeout-fetch.wxml-->
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <text class="title">外卖代取</text>
+    <text class="subtitle">3元/个，快速送达</text>
+  </view>
+ 
+  <!-- 取餐信息 -->
+  <view class="form-section">
+    <view class="form-item">
+      <text class="label">取餐地址</text>
+      <picker class="picker" mode="selector" range="{{takeoutLocations}}" value="{{locationIndex}}" bindchange="onLocationChange">
+        <view class="picker-view">{{takeoutLocation || '请选择取餐地址'}}</view>
+      </picker>
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">店铺名称</text>
+      <input class="input" placeholder="请输入外卖店铺名称" value="{{shopName}}" bindinput="onShopNameInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">取餐码</text>
+      <input class="input" placeholder="请输入取餐码" value="{{pickupCode}}" bindinput="onPickupCodeInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">送达地址</text>
+      <input class="input" placeholder="请输入送达地址（如：3号楼201室）" value="{{deliveryAddress}}" bindinput="onDeliveryAddressInput" />
+    </view>
+ 
+    <view class="form-item">
+      <text class="label">联系电话</text>
+      <input class="input" type="number" placeholder="请输入联系电话" value="{{phone}}" bindinput="onPhoneInput" />
+    </view>
+ 
+    <!-- 特殊要求 -->
+    <view class="form-item">
+      <text class="label">特殊要求</text>
+      <textarea class="textarea" placeholder="请说明外卖的特殊要求（如：需要保温、不要辣、需要餐具等）" value="{{specialRequest}}" bindinput="onSpecialRequestInput" maxlength="200" />
+      <text class="word-count">{{specialRequest.length}}/200</text>
+    </view>
+ 
+    <!-- 期望送达时间 -->
+    <view class="form-item">
+      <text class="label">期望送达时间</text>
+      <picker class="picker" mode="selector" range="{{deliveryTimes}}" value="{{deliveryTimeIndex}}" bindchange="onDeliveryTimeChange">
+        <view class="picker-view">{{deliveryTime || '请选择期望送达时间'}}</view>
+      </picker>
+    </view>
+ 
+    <!-- 价格显示 -->
+    <view class="price-section">
+      <view class="price-item">
+        <text class="price-label">服务费：</text>
+        <text class="price-value">¥{{serviceFee}}</text>
+      </view>
+      <view class="price-total">
+        <text class="total-label">总计：</text>
+        <text class="total-value">¥{{totalPrice}}</text>
+      </view>
+    </view>
+ 
+    <!-- 温馨提示 -->
+    <view class="tips-section">
+      <text class="tips-title">💡 温馨提示</text>
+      <text class="tips-content">• 请确保取餐码准确无误\n• 饮品请备注是否需要加冰\n• 如有特殊要求请详细说明</text>
+    </view>
+ 
+    <!-- 提交按钮 -->
+    <button class="submit-btn" disabled="{{!canSubmit}}" bindtap="submitOrder">提交订单</button>
+  </view>
+</view>

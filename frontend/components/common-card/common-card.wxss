@@ -1,0 +1,71 @@
+.card {
+  display: flex;
+  align-items: center;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  margin: 16rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-right: 16rpx;
+}
+
+.card-icon image {
+  width: 100%;
+  height: 100%;
+}
+
+.card-content {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.card-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 8rpx;
+}
+
+.card-arrow {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.card-arrow image {
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+
+/* 背景色类 */
+.bg-red {
+  background-color: #fef2f2;
+}
+
+.bg-teal {
+  background-color: #e6f7f7;
+}
+
+.bg-blue {
+  background-color: #e6f0ff;
+}
+
+.bg-orange {
+  background-color: #fff7e6;
+}
+
+.bg-green {
+  background-color: #f0f9f0;
+}
+
+.bg-yellow {
+  background-color: #fffbe6;
+}

@@ -1,0 +1,32 @@
+<!-- pages/test/test.wxml -->
+<view class="container">
+  <view class="title">Django服务器测试</view>
+  
+  <view class="button-group">
+    <button class="btn btn-primary" bindtap="testConnection">
+      测试服务器连接
+    </button>
+    
+    <button class="btn btn-secondary" bindtap="testLogin">
+      测试登录接口
+    </button>
+    
+    <button class="btn btn-secondary" bindtap="testWelcome">
+      测试欢迎页图片
+    </button>
+  </view>
+  
+  <view class="result-box">
+    <text class="result-title">测试结果：</text>
+    <text class="result-content">{{result}}</text>
+  </view>
+  
+  <view class="instructions">
+    <text class="instructions-title">操作步骤：</text>
+    <text>1. 打开终端/命令行</text>
+    <text>2. 进入项目目录：cd C:\Users\asus\PycharmProjects\smart_backend</text>
+    <text>3. 激活虚拟环境：.venv\Scripts\activate（Windows）</text>
+    <text>4. 启动服务器：python manage.py runserver 127.0.0.1:8000</text>
+    <text>5. 看到 "Starting development server at http://127.0.0.1:8000/" 表示成功</text>
+  </view>
+</view>

@@ -1,0 +1,206 @@
+/* pages/index/index.wxss */
+.container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 30rpx;
+}
+
+/* 顶部区域 */
+.top-section {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #1E90FF;
+  box-sizing: border-box;
+}
+
+/* 客服按钮 */
+.customer-service {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.service-icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+/* 搜索栏样式 */
+.search-section {
+  flex: 1;
+  max-width: calc(100% - 80rpx); /* 确保搜索栏不会超出屏幕 */
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 30rpx;
+  padding: 15rpx 20rpx;
+  height: 60rpx;
+  box-sizing: border-box;
+}
+
+.search-icon {
+  margin-right: 15rpx;
+  color: white;
+}
+
+.search-input {
+  flex: 1;
+  color: white;
+  font-size: 28rpx;
+  height: 100%;
+}
+
+.placeholder-style {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 轮播图样式 */
+.swiper {
+  height: 300rpx;
+  margin: 20rpx 30rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.swiper-item {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.banner-1 {
+  background: linear-gradient(45deg, #FF9A9E, #FAD0C4);
+}
+
+.banner-2 {
+  background: linear-gradient(45deg, #A1C4FD, #C2E9FB);
+}
+
+.banner-3 {
+  background: linear-gradient(45deg, #FFECD2, #FCB69F);
+}
+
+.swiper-text {
+  color: white;
+}
+
+/* 通知栏样式 */
+.van-notice-bar {
+  margin: 10rpx 0;
+}
+
+/* 服务区域样式 */
+.service-section {
+  background-color: white;
+  margin: 30rpx;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 服务网格样式 - 3×3布局 */
+.service-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.service-item {
+  width: 33.33%; /* 3列布局 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx 10rpx;
+  box-sizing: border-box;
+}
+
+.service-item:active {
+  background-color: #f0f0f0;
+  border-radius: 16rpx;
+}
+
+.service-icon {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15rpx;
+}
+
+.icon-image {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.service-name {
+  font-size: 26rpx;
+  color: #333;
+  text-align: center;
+  margin-bottom: 8rpx;
+  font-weight: bold;
+}
+
+.service-price {
+  font-size: 22rpx;
+  color: #FF6B6B;
+  text-align: center;
+}
+
+/* 服务图标背景色 */
+.bg-red {
+  background-color: #FF6B6B;
+}
+
+.bg-teal {
+  background-color: #4ECDC4;
+}
+
+.bg-blue {
+  background-color: #45B7D1;
+}
+
+.bg-orange {
+  background-color: #FFA07A;
+}
+
+.bg-green {
+  background-color: #98D8C8;
+}
+
+.bg-yellow {
+  background-color: #F7DC6F;
+}
+.bg-purple {
+  background-color: #D7BDE2;
+}

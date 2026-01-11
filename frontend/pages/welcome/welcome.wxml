@@ -1,0 +1,33 @@
+<!-- pages/welcome/welcome.wxml -->
+<view class="welcome-container">
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-content">
+      <text>加载中...</text>
+    </view>
+  </view>
+  
+  <!-- 欢迎图片轮播 -->
+  <swiper 
+    class="welcome-swiper" 
+    wx:if="{{!loading && images.length > 0}}"
+    indicator-dots="{{images.length > 1}}"
+    autoplay="{{false}}"
+    current="{{currentImageIndex}}"
+  >
+    <swiper-item wx:for="{{images}}" wx:key="url">
+      <image 
+        class="welcome-image" 
+        src="{{item.url}}" 
+        mode="aspectFill"
+      ></image>
+    </swiper-item>
+  </swiper>
+  
+  <!-- 倒计时和跳过按钮 -->
+  <view class="control-bar" wx:if="{{!loading}}">
+    <button class="skip-btn" bindtap="doJump">
+      跳过 {{second}}s
+    </button>
+  </view>
+</view>
