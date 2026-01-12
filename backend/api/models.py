@@ -1,33 +1,96 @@
 # backend/api/models.py
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.models import User
 from django.utils import timezone
+import uuid
+
 
 class UserProfile(models.Model):
     """用户资料扩展"""
+    GENDER_CHOICES = [
+        ('male', '男'),
+        ('female', '女'),
+        ('unknown', '未知'),
+    ]
+
+    LOGIN_TYPE_CHOICES = [
+        ('wechat', '微信登录'),
+        ('phone', '手机号登录'),
+        ('account', '账号登录'),
+        ('quick', '快速登录'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='用户')
-    phone = models.CharField(max_length=11, verbose_name='绑定手机号')
+
+    # 微信相关字段
+    openid = models.CharField(max_length=100, unique=True, null=True, blank=True, verbose_name='微信OpenID')
+    wechat_nickname = models.CharField(max_length=100, blank=True, verbose_name='微信昵称')
+    wechat_avatar = models.URLField(max_length=500, blank=True, verbose_name='微信头像')
+    wechat_unionid = models.CharField(max_length=100, unique=True, null=True, blank=True, verbose_name='微信UnionID')
+    login_type = models.CharField(max_length=10, choices=LOGIN_TYPE_CHOICES, default='wechat', verbose_name='登录方式')
+
+    # 用户基本信息
+    phone = models.CharField(max_length=11, verbose_name='绑定手机号', blank=True, default='')
     real_name = models.CharField(max_length=50, verbose_name='真实姓名')
     student_id = models.CharField(max_length=20, verbose_name='学号')
+
+    # 个人资料
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='unknown', verbose_name='性别')
+    school = models.CharField(max_length=100, blank=True, null=True, verbose_name='学校')
+    college = models.CharField(max_length=100, blank=True, null=True, verbose_name='学院')
+    major = models.CharField(max_length=100, blank=True, null=True, verbose_name='专业')
+
+    # 状态信息
+    is_rider = models.BooleanField(default=False, verbose_name='是否是骑手')
+    is_online = models.BooleanField(default=False, verbose_name='是否在线')
     is_verified = models.BooleanField(default=False, verbose_name='是否实名认证')
     credit_score = models.IntegerField(default=100, verbose_name='诚信度分数')
+
+    # 黑名单相关
     is_blacklisted = models.BooleanField(default=False, verbose_name='是否在黑名单')
     blacklist_reason = models.TextField(blank=True, verbose_name='黑名单原因')
     blacklist_until = models.DateTimeField(null=True, blank=True, verbose_name='黑名单到期时间')
+
+    # 登录统计
     last_login_time = models.DateTimeField(auto_now=True, verbose_name='最后登录时间')
     last_logout_time = models.DateTimeField(null=True, blank=True, verbose_name='最后退出时间')
     login_count = models.IntegerField(default=0, verbose_name='登录次数')
+
+    # 时间戳
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    # 头像
     avatar_url = models.URLField(max_length=500, blank=True, verbose_name='头像URL')
 
     class Meta:
         verbose_name = '用户资料'
         verbose_name_plural = '用户资料管理'
+        indexes = [
+            models.Index(fields=['openid']),
+            models.Index(fields=['phone']),
+            models.Index(fields=['student_id']),
+            models.Index(fields=['is_online']),
+            models.Index(fields=['is_rider']),
+        ]
 
     def __str__(self):
         return f"{self.user.username} - {self.real_name or '未认证'}"
+
+    def is_active_user(self):
+        """判断用户是否活跃"""
+        if self.is_blacklisted:
+            return False
+        if self.blacklist_until and self.blacklist_until > timezone.now():
+            return False
+        return True
+
+    def update_login_info(self):
+        """更新登录信息"""
+        self.login_count += 1
+        self.last_login_time = timezone.now()
+        self.is_online = True
+        self.save()
 
 
 class BlacklistRecord(models.Model):
@@ -52,6 +115,14 @@ class BlacklistRecord(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.reason}"
+
+    def is_active(self):
+        """判断记录是否有效"""
+        if self.status != 'active':
+            return False
+        if self.expiry_date and self.expiry_date < timezone.now():
+            return False
+        return True
 
 
 class AuditApplication(models.Model):
@@ -94,6 +165,7 @@ class Wallet(models.Model):
     frozen_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='冻结余额')
     total_income = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='总收入')
     total_expenditure = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='总支出')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
@@ -102,6 +174,10 @@ class Wallet(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - 余额: {self.balance}"
+
+    def available_balance(self):
+        """可用余额"""
+        return self.balance - self.frozen_balance
 
 
 class Transaction(models.Model):
@@ -125,6 +201,11 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='金额')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name='状态')
     description = models.CharField(max_length=200, verbose_name='描述')
+
+    # 新增字段
+    metadata = models.JSONField(default=dict, blank=True, verbose_name='元数据')
+    completed_at = models.DateTimeField(null=True, blank=True, verbose_name='完成时间')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
@@ -151,6 +232,11 @@ class Notification(models.Model):
     title = models.CharField(max_length=200, verbose_name='标题')
     content = models.TextField(verbose_name='内容')
     is_read = models.BooleanField(default=False, verbose_name='是否已读')
+
+    # 新增字段
+    metadata = models.JSONField(default=dict, blank=True, verbose_name='元数据')
+    read_at = models.DateTimeField(null=True, blank=True, verbose_name='阅读时间')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     class Meta:
@@ -161,12 +247,23 @@ class Notification(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.title}"
 
+    def mark_as_read(self):
+        """标记为已读"""
+        if not self.is_read:
+            self.is_read = True
+            self.read_at = timezone.now()
+            self.save()
+
 
 class Conversation(models.Model):
     """会话"""
     participants = models.ManyToManyField(User, verbose_name='参与者')
     last_message = models.TextField(blank=True, verbose_name='最后一条消息')
     last_message_time = models.DateTimeField(auto_now=True, verbose_name='最后消息时间')
+
+    # 新增字段
+    unread_count = models.IntegerField(default=0, verbose_name='未读消息数')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     class Meta:
@@ -178,13 +275,33 @@ class Conversation(models.Model):
         participants_str = ', '.join([user.username for user in self.participants.all()])
         return f"{participants_str} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
 
+    def update_last_message(self, message, sender):
+        """更新最后一条消息"""
+        self.last_message = message[:100]  # 只保存前100个字符
+        self.last_message_time = timezone.now()
+        self.unread_count += 1
+        self.save()
+
 
 class Message(models.Model):
     """消息"""
+    MESSAGE_TYPES = [
+        ('text', '文本'),
+        ('image', '图片'),
+        ('file', '文件'),
+        ('location', '位置'),
+        ('system', '系统消息'),
+    ]
+
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, verbose_name='会话')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='发送者')
     content = models.TextField(verbose_name='内容')
+    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPES, default='text', verbose_name='消息类型')
     is_read = models.BooleanField(default=False, verbose_name='是否已读')
+
+    # 新增字段
+    metadata = models.JSONField(default=dict, blank=True, verbose_name='元数据')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     class Meta:
@@ -234,7 +351,18 @@ class Order(models.Model):
         ('cancelled', '已取消'),
     ]
 
-    order_no = models.CharField(max_length=50, unique=True, verbose_name='订单编号')
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', '待支付'),
+        ('paid', '已支付'),
+        ('refunded', '已退款'),
+        ('cancelled', '已取消'),
+    ]
+
+    order_no = models.CharField(
+        max_length=50,
+        unique=True,
+        default=uuid.uuid4,
+        verbose_name='订单编号')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', verbose_name='用户')
     rider = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
                               related_name='rider_orders', verbose_name='骑手')
@@ -242,18 +370,44 @@ class Order(models.Model):
     title = models.CharField(max_length=200, verbose_name='订单标题')
     description = models.TextField(verbose_name='订单描述')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='价格')
+
+    # 状态字段
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name='状态')
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending',
+                                      verbose_name='支付状态')
+
+    # 位置信息
+    pickup_location = models.CharField(max_length=200, blank=True, verbose_name='取件地点')
+    delivery_location = models.CharField(max_length=200, blank=True, verbose_name='送达地点')
+
+    # 时间信息
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     accepted_at = models.DateTimeField(null=True, blank=True, verbose_name='接单时间')
     completed_at = models.DateTimeField(null=True, blank=True, verbose_name='完成时间')
+    cancelled_at = models.DateTimeField(null=True, blank=True, verbose_name='取消时间')
 
     class Meta:
         verbose_name = '订单'
         verbose_name_plural = '订单'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['user', 'status']),
+            models.Index(fields=['rider', 'status']),
+        ]
 
     def __str__(self):
         return f"{self.order_no} - {self.title}"
+
+    def can_be_accepted(self):
+        """判断订单是否可以被接单"""
+        return self.status == 'pending' and self.payment_status == 'paid'
+
+    def complete_order(self):
+        """完成订单"""
+        self.status = 'completed'
+        self.completed_at = timezone.now()
+        self.save()
 
 
 # 骑手设置模型
@@ -293,11 +447,25 @@ class RiderGrabRecord(models.Model):
     def __str__(self):
         return f"{self.user.username} 接了订单 {self.order.order_no}"
 
+
 class Announcement(models.Model):
     """系统公告"""
+    ANNOUNCEMENT_TYPES = [
+        ('system', '系统公告'),
+        ('activity', '活动公告'),
+        ('update', '更新公告'),
+        ('important', '重要通知'),
+        ('general', '一般通知'),
+    ]
+
     title = models.CharField(max_length=200, verbose_name='公告标题')
     content = models.TextField(verbose_name='公告内容')
-    announcement_type = models.CharField(max_length=20, verbose_name='公告类型', default='system')
+    announcement_type = models.CharField(max_length=20, choices=ANNOUNCEMENT_TYPES, default='system',
+                                         verbose_name='公告类型')
+
+    # 新增字段
+    cover_image = models.URLField(max_length=500, blank=True, null=True, verbose_name='封面图片')
+
     is_active = models.BooleanField(default=True, verbose_name='是否启用')
     start_time = models.DateTimeField(null=True, blank=True, verbose_name='开始时间')
     end_time = models.DateTimeField(null=True, blank=True, verbose_name='结束时间')
@@ -312,6 +480,17 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
+
+    def is_currently_active(self):
+        """判断公告当前是否生效"""
+        if not self.is_active:
+            return False
+        now = timezone.now()
+        if self.start_time and self.start_time > now:
+            return False
+        if self.end_time and self.end_time < now:
+            return False
+        return True
 
 
 class UserFeedback(models.Model):
@@ -348,5 +527,89 @@ class UserFeedback(models.Model):
     def __str__(self):
         return f"{self.get_feedback_type_display()} - {self.title}"
 
+    def mark_as_resolved(self, reply_content):
+        """标记为已解决"""
+        self.status = 'resolved'
+        self.reply = reply_content
+        self.save()
 
 
+# 微信会话模型
+class WechatSession(models.Model):
+    """微信会话存储"""
+    openid = models.CharField(max_length=100, unique=True, verbose_name='微信OpenID')
+    session_key = models.CharField(max_length=100, verbose_name='会话密钥')
+    unionid = models.CharField(max_length=100, blank=True, null=True, verbose_name='微信UnionID')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    expires_at = models.DateTimeField(verbose_name='过期时间')
+
+    class Meta:
+        verbose_name = '微信会话'
+        verbose_name_plural = '微信会话管理'
+        indexes = [
+            models.Index(fields=['openid']),
+        ]
+
+    def __str__(self):
+        return f"{self.openid}"
+
+    def is_valid(self):
+        """判断会话是否有效"""
+        return self.expires_at > timezone.now()
+
+
+# 地址模型
+class Address(models.Model):
+    """用户地址"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses', verbose_name='用户')
+    name = models.CharField(max_length=50, verbose_name='收货人姓名')
+    phone = models.CharField(max_length=11, verbose_name='联系电话')
+    address = models.CharField(max_length=200, verbose_name='详细地址')
+    is_default = models.BooleanField(default=False, verbose_name='是否默认地址')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    class Meta:
+        verbose_name = '用户地址'
+        verbose_name_plural = '用户地址管理'
+        ordering = ['-is_default', '-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.address}"
+
+    def save(self, *args, **kwargs):
+        """保存时，如果是默认地址，取消其他地址的默认状态"""
+        if self.is_default:
+            # 获取所有当前用户的地址
+            Address.objects.filter(user=self.user).exclude(id=self.id).update(is_default=False)
+        super().save(*args, **kwargs)
+
+
+# 订单评价模型
+class OrderReview(models.Model):
+    """订单评价"""
+    RATING_CHOICES = [
+        (1, '1星'),
+        (2, '2星'),
+        (3, '3星'),
+        (4, '4星'),
+        (5, '5星'),
+    ]
+
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='review', verbose_name='订单')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='评价用户')
+    rider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_reviews',
+                              verbose_name='被评价骑手')
+    rating = models.IntegerField(choices=RATING_CHOICES, verbose_name='评分')
+    comment = models.TextField(blank=True, verbose_name='评价内容')
+    is_anonymous = models.BooleanField(default=False, verbose_name='是否匿名')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='评价时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+
+    class Meta:
+        verbose_name = '订单评价'
+        verbose_name_plural = '订单评价管理'
+
+    def __str__(self):
+        return f"{self.order.order_no} - {self.rating}星"

@@ -5,3 +5,14 @@ requests>=2.28.0
 pycryptodome>=3.15.0
 python-dotenv>=0.19.0
 Pillow>=9.0.0
+
+# 生产数据库支持
+psycopg2-binary>=2.9.0  # PostgreSQL
+PyMySQL>=1.0.0         # MySQL
+mysqlclient>=2.1.0     # MySQL客户端
+
+# JWT支持
+PyJWT>=2.8.0
+
+# 备份工具
+django-dbbackup>=4.0.0

@@ -3,19 +3,29 @@
 /**
  * 认证信息管理工具
  * 统一管理用户的登录状态、实名认证状态和服务权限
+ * 适配JWT令牌格式
  */
 const AuthManager = {
   // 存储键名
   STORAGE_KEYS: {
     AUTH_INFO: 'authInfo',
     AUTH_STATUS: 'authStatus',
-    USER_TOKEN: 'userToken',
     USER_INFO: 'userInfo',
-    LOGIN_TOKEN: 'token' // 与api.js中的token保持一致
+    ACCESS_TOKEN: 'accessToken',
+    REFRESH_TOKEN: 'refreshToken',
+    LOGIN_TOKEN: 'accessToken', // 兼容旧代码
+    TOKEN_EXPIRE_TIME: 'tokenExpireTime'
   },
   
-  // 缓存过期时间（7天）
-  CACHE_EXPIRE_TIME: 7 * 24 * 60 * 60 * 1000,
+  // 令牌配置
+  TOKEN_CONFIG: {
+    // 提前刷新时间（提前5分钟刷新令牌）
+    REFRESH_AHEAD_MINUTES: 5,
+    // 默认访问令牌过期时间（30分钟，单位：毫秒）
+    DEFAULT_ACCESS_EXPIRE: 30 * 60 * 1000,
+    // 默认刷新令牌过期时间（7天，单位：毫秒）
+    DEFAULT_REFRESH_EXPIRE: 7 * 24 * 60 * 60 * 1000
+  },
 
   // 认证状态常量
   AUTH_STATUS: {
@@ -35,6 +45,57 @@ const AuthManager = {
 
   // 私有变量 - 事件回调
   _permissionChangeCallback: null,
+
+  /**
+   * 保存用户登录信息（适配JWT格式）
+   * @param {object} userData - 用户数据
+   * @param {object} tokenData - 令牌数据 {access_token, refresh_token, expires_in}
+   * @returns {boolean} - 是否保存成功
+   */
+  saveUserInfo: function(userData, tokenData) {
+    try {
+      // 统一处理头像字段：优先使用 avatar_url，其次使用 avatar 或 avatarUrl
+      const normalizedInfo = {
+        ...userData,
+        avatar_url: userData.avatar_url || userData.avatar || userData.avatarUrl
+      };
+      
+      // 清理可能存在的重复字段
+      delete normalizedInfo.avatar;
+      delete normalizedInfo.avatarUrl;
+      
+      const now = Date.now();
+      const expiresIn = tokenData.expires_in || this.TOKEN_CONFIG.DEFAULT_ACCESS_EXPIRE / 1000;
+      const expireTime = now + (expiresIn * 1000);
+      
+      // 用户信息带时间戳和令牌信息
+      const userInfoWithTimestamp = {
+        userInfo: normalizedInfo,
+        accessToken: tokenData.access_token,
+        refreshToken: tokenData.refresh_token,
+        tokenExpireTime: expireTime,
+        timestamp: now,
+        // 兼容旧字段
+        token: tokenData.access_token
+      };
+      
+      // 分别存储
+      wx.setStorageSync(this.STORAGE_KEYS.USER_INFO, userInfoWithTimestamp);
+      wx.setStorageSync(this.STORAGE_KEYS.ACCESS_TOKEN, tokenData.access_token);
+      wx.setStorageSync(this.STORAGE_KEYS.REFRESH_TOKEN, tokenData.refresh_token);
+      wx.setStorageSync(this.STORAGE_KEYS.TOKEN_EXPIRE_TIME, expireTime);
+      
+      console.log('用户登录信息保存成功（JWT格式）:', {
+        userInfo: normalizedInfo,
+        expireTime: new Date(expireTime).toLocaleString()
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('保存用户信息失败:', error);
+      return false;
+    }
+  },
 
   /**
    * 保存认证信息到本地存储
@@ -138,44 +199,7 @@ const AuthManager = {
   },
 
   /**
-   * 保存用户登录信息（带缓存时间戳）
-   * @param {object} userData - 用户数据
-   * @param {string} token - 登录令牌
-   */
-  saveUserInfo: function(userData, token) {
-    try {
-      // 统一处理头像字段：优先使用 avatar_url，其次使用 avatar 或 avatarUrl
-      const normalizedInfo = {
-        ...userData,
-        avatar_url: userData.avatar_url || userData.avatar || userData.avatarUrl
-      };
-      
-      // 清理可能存在的重复字段
-      delete normalizedInfo.avatar;
-      delete normalizedInfo.avatarUrl;
-      
-      // 用户信息带时间戳
-      const userInfoWithTimestamp = {
-        userInfo: normalizedInfo,
-        token: token,
-        timestamp: Date.now()
-      };
-      
-      // 分别存储以便兼容旧代码
-      wx.setStorageSync(this.STORAGE_KEYS.USER_INFO, userInfoWithTimestamp);
-      wx.setStorageSync(this.STORAGE_KEYS.USER_TOKEN, token);
-      wx.setStorageSync(this.STORAGE_KEYS.LOGIN_TOKEN, token); // 保持与api.js一致
-      
-      console.log('用户登录信息保存成功（已统一头像字段）:', normalizedInfo);
-      return true;
-    } catch (error) {
-      console.error('保存用户信息失败:', error);
-      return false;
-    }
-  },
-
-  /**
-   * 获取用户信息（检查缓存过期）
+   * 获取用户信息
    * @returns {object|null} - 用户信息
    */
   getUserInfo: function() {
@@ -198,10 +222,10 @@ const AuthManager = {
       }
       
       // 检查是否为带时间戳的新格式
-      if (parsedData.timestamp) {
-        // 检查缓存是否过期
-        if (Date.now() - parsedData.timestamp > this.CACHE_EXPIRE_TIME) {
-          console.log('用户信息缓存已过期，自动清除');
+      if (parsedData.userInfo) {
+        // 检查缓存是否过期（7天）
+        if (parsedData.timestamp && Date.now() - parsedData.timestamp > this.TOKEN_CONFIG.DEFAULT_REFRESH_EXPIRE) {
+          console.log('用户信息缓存已过期（7天），自动清除');
           this.clearAllUserData();
           return null;
         }
@@ -217,17 +241,77 @@ const AuthManager = {
   },
 
   /**
-   * 获取用户token
-   * @returns {string|null} - 用户token
+   * 获取访问令牌
+   * @returns {string|null} - 访问令牌
    */
-  getUserToken: function() {
+  getAccessToken: function() {
     try {
-      return wx.getStorageSync(this.STORAGE_KEYS.USER_TOKEN) || 
-             wx.getStorageSync(this.STORAGE_KEYS.LOGIN_TOKEN) || null;
+      const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
+      if (storedData && storedData.accessToken) {
+        return storedData.accessToken;
+      }
+      // 兼容旧格式
+      return wx.getStorageSync(this.STORAGE_KEYS.ACCESS_TOKEN) || null;
     } catch (error) {
-      console.error('获取用户token失败:', error);
+      console.error('获取访问令牌失败:', error);
       return null;
     }
+  },
+
+  /**
+   * 获取刷新令牌
+   * @returns {string|null} - 刷新令牌
+   */
+  getRefreshToken: function() {
+    try {
+      const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
+      if (storedData && storedData.refreshToken) {
+        return storedData.refreshToken;
+      }
+      return wx.getStorageSync(this.STORAGE_KEYS.REFRESH_TOKEN) || null;
+    } catch (error) {
+      console.error('获取刷新令牌失败:', error);
+      return null;
+    }
+  },
+
+  /**
+   * 获取令牌过期时间
+   * @returns {number|null} - 过期时间戳
+   */
+  getTokenExpireTime: function() {
+    try {
+      const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
+      if (storedData && storedData.tokenExpireTime) {
+        return storedData.tokenExpireTime;
+      }
+      return wx.getStorageSync(this.STORAGE_KEYS.TOKEN_EXPIRE_TIME) || null;
+    } catch (error) {
+      console.error('获取令牌过期时间失败:', error);
+      return null;
+    }
+  },
+
+  /**
+   * 检查访问令牌是否过期
+   * @returns {boolean} - 是否过期
+   */
+  isAccessTokenExpired: function() {
+    const expireTime = this.getTokenExpireTime();
+    if (!expireTime) return true;
+    
+    const now = Date.now();
+    const refreshThreshold = this.TOKEN_CONFIG.REFRESH_AHEAD_MINUTES * 60 * 1000;
+    
+    return now >= (expireTime - refreshThreshold);
+  },
+
+  /**
+   * 检查是否需要刷新令牌
+   * @returns {boolean} - 是否需要刷新
+   */
+  shouldRefreshToken: function() {
+    return this.isAccessTokenExpired();
   },
 
   /**
@@ -235,9 +319,48 @@ const AuthManager = {
    * @returns {boolean} - 是否已登录
    */
   isUserLoggedIn: function() {
-    const token = this.getUserToken();
+    const accessToken = this.getAccessToken();
     const userInfo = this.getUserInfo();
-    return !!(token && userInfo);
+    const isTokenValid = accessToken && !this.isAccessTokenExpired();
+    return !!(isTokenValid && userInfo);
+  },
+
+  /**
+   * 更新令牌信息
+   * @param {object} tokenData - 新的令牌数据
+   * @returns {boolean} - 是否更新成功
+   */
+  updateTokenInfo: function(tokenData) {
+    try {
+      const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
+      if (!storedData) return false;
+      
+      const now = Date.now();
+      const expiresIn = tokenData.expires_in || this.TOKEN_CONFIG.DEFAULT_ACCESS_EXPIRE / 1000;
+      const expireTime = now + (expiresIn * 1000);
+      
+      const updatedData = {
+        ...storedData,
+        accessToken: tokenData.access_token || storedData.accessToken,
+        refreshToken: tokenData.refresh_token || storedData.refreshToken,
+        tokenExpireTime: expireTime,
+        token: tokenData.access_token || storedData.token // 兼容旧字段
+      };
+      
+      wx.setStorageSync(this.STORAGE_KEYS.USER_INFO, updatedData);
+      wx.setStorageSync(this.STORAGE_KEYS.ACCESS_TOKEN, updatedData.accessToken);
+      wx.setStorageSync(this.STORAGE_KEYS.REFRESH_TOKEN, updatedData.refreshToken);
+      wx.setStorageSync(this.STORAGE_KEYS.TOKEN_EXPIRE_TIME, expireTime);
+      
+      console.log('令牌信息更新成功:', {
+        expireTime: new Date(expireTime).toLocaleString()
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('更新令牌信息失败:', error);
+      return false;
+    }
   },
 
   /**
@@ -246,41 +369,33 @@ const AuthManager = {
    */
   updateUserInfo: function(updatedData) {
     try {
-      const userInfo = this.getUserInfo();
-      if (userInfo) {
-        // 统一处理头像字段
-        const normalizedUpdate = {
-          ...updatedData,
-          avatar_url: updatedData.avatar_url || updatedData.avatar || updatedData.avatarUrl
-        };
-        
-        // 清理可能存在的重复字段
-        delete normalizedUpdate.avatar;
-        delete normalizedUpdate.avatarUrl;
-        
-        // 获取完整的存储数据（包含时间戳）
-        const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
-        let parsedData;
-        
-        if (typeof storedData === 'string') {
-          parsedData = JSON.parse(storedData);
-        } else {
-          parsedData = storedData;
-        }
-        
-        // 更新用户信息并保留时间戳
-        const newUserInfo = { ...userInfo, ...normalizedUpdate };
-        const newStoredData = {
-          userInfo: newUserInfo,
-          token: parsedData.token || this.getUserToken(),
-          timestamp: parsedData.timestamp || Date.now()
-        };
-        
-        wx.setStorageSync(this.STORAGE_KEYS.USER_INFO, newStoredData);
-        console.log('用户信息更新成功（已统一头像字段）:', newUserInfo);
-        return true;
-      }
-      return false;
+      const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
+      if (!storedData) return false;
+      
+      // 统一处理头像字段
+      const normalizedUpdate = {
+        ...updatedData,
+        avatar_url: updatedData.avatar_url || updatedData.avatar || updatedData.avatarUrl
+      };
+      
+      // 清理可能存在的重复字段
+      delete normalizedUpdate.avatar;
+      delete normalizedUpdate.avatarUrl;
+      
+      // 更新用户信息，保留令牌信息
+      const updatedUserInfo = storedData.userInfo ? 
+        { ...storedData.userInfo, ...normalizedUpdate } : 
+        normalizedUpdate;
+      
+      const newStoredData = {
+        ...storedData,
+        userInfo: updatedUserInfo,
+        timestamp: storedData.timestamp || Date.now()
+      };
+      
+      wx.setStorageSync(this.STORAGE_KEYS.USER_INFO, newStoredData);
+      console.log('用户信息更新成功:', updatedUserInfo);
+      return true;
     } catch (error) {
       console.error('更新用户信息失败:', error);
       return false;
@@ -288,49 +403,56 @@ const AuthManager = {
   },
 
   /**
-   * 刷新用户信息缓存时间
-   * @returns {boolean} - 是否刷新成功
+   * 获取完整的用户档案信息（包含认证信息）
+   * @returns {object} - 完整的用户档案
    */
-  refreshUserCache: function() {
-    try {
-      const userInfo = this.getUserInfo();
-      const token = this.getUserToken();
-      
-      if (userInfo && token) {
-        return this.saveUserInfo(userInfo, token);
-      }
-      return false;
-    } catch (error) {
-      console.error('刷新用户缓存失败:', error);
-      return false;
+  getUserProfile: function() {
+    // 检查令牌是否过期
+    const shouldRefresh = this.shouldRefreshToken();
+    const isLoggedIn = this.isUserLoggedIn();
+    
+    if (shouldRefresh && isLoggedIn) {
+      console.log('访问令牌即将过期，需要刷新');
     }
+    
+    const userInfo = this.getUserInfo();
+    const authInfo = this.getAuthInfo();
+    const isAuthenticated = this.isAuthenticated();
+    const servicePermissions = this.getServicePermissions();
+    const tokenExpireTime = this.getTokenExpireTime();
+    
+    return {
+      isLoggedIn: isLoggedIn,
+      isAuthenticated: isAuthenticated,
+      authStatus: this.getAuthStatus(),
+      userInfo: userInfo,
+      authInfo: authInfo,
+      tokenInfo: {
+        accessToken: this.getAccessToken(),
+        refreshToken: this.getRefreshToken(),
+        expireTime: tokenExpireTime,
+        shouldRefresh: shouldRefresh,
+        expiresIn: tokenExpireTime ? Math.max(0, tokenExpireTime - Date.now()) : 0
+      },
+      hasCompleteProfile: isLoggedIn && isAuthenticated,
+      servicePermissions: servicePermissions,
+      cacheTimestamp: this.getCacheTimestamp()
+    };
   },
 
   /**
-   * 检查缓存是否过期
-   * @returns {boolean} - 是否过期
+   * 获取缓存时间戳
+   * @returns {number|null} - 时间戳
    */
-  isCacheExpired: function() {
+  getCacheTimestamp: function() {
     try {
       const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
-      if (!storedData) return true;
+      if (!storedData) return null;
       
-      let parsedData;
-      if (typeof storedData === 'string') {
-        parsedData = JSON.parse(storedData);
-      } else {
-        parsedData = storedData;
-      }
-      
-      if (parsedData.timestamp) {
-        return Date.now() - parsedData.timestamp > this.CACHE_EXPIRE_TIME;
-      }
-      
-      // 旧格式数据视为未过期
-      return false;
+      return storedData.timestamp || null;
     } catch (error) {
-      console.error('检查缓存过期失败:', error);
-      return true;
+      console.error('获取缓存时间戳失败:', error);
+      return null;
     }
   },
 
@@ -375,67 +497,6 @@ const AuthManager = {
     } catch (error) {
       console.error('清除用户数据失败:', error);
       return false;
-    }
-  },
-
-  /**
-   * 获取完整的用户档案信息（包含认证信息）
-   * @returns {object} - 完整的用户档案
-   */
-  getUserProfile: function() {
-    // 先检查缓存是否过期
-    if (this.isCacheExpired()) {
-      console.log('用户缓存已过期，清除数据');
-      this.clearAllUserData();
-      return {
-        isLoggedIn: false,
-        isAuthenticated: false,
-        authStatus: this.AUTH_STATUS.NOT_STARTED,
-        userInfo: null,
-        authInfo: null,
-        hasCompleteProfile: false,
-        servicePermissions: this.getServicePermissions()
-      };
-    }
-    
-    const userInfo = this.getUserInfo();
-    const authInfo = this.getAuthInfo();
-    const isAuthenticated = this.isAuthenticated();
-    const isLoggedIn = this.isUserLoggedIn();
-    const servicePermissions = this.getServicePermissions();
-    
-    return {
-      isLoggedIn: isLoggedIn,
-      isAuthenticated: isAuthenticated,
-      authStatus: this.getAuthStatus(),
-      userInfo: userInfo,
-      authInfo: authInfo,
-      hasCompleteProfile: isLoggedIn && isAuthenticated,
-      servicePermissions: servicePermissions,
-      cacheTimestamp: this.getCacheTimestamp()
-    };
-  },
-
-  /**
-   * 获取缓存时间戳
-   * @returns {number|null} - 时间戳
-   */
-  getCacheTimestamp: function() {
-    try {
-      const storedData = wx.getStorageSync(this.STORAGE_KEYS.USER_INFO);
-      if (!storedData) return null;
-      
-      let parsedData;
-      if (typeof storedData === 'string') {
-        parsedData = JSON.parse(storedData);
-      } else {
-        parsedData = storedData;
-      }
-      
-      return parsedData.timestamp || null;
-    } catch (error) {
-      console.error('获取缓存时间戳失败:', error);
-      return null;
     }
   },
 
@@ -794,6 +855,68 @@ const AuthManager = {
   },
 
   /**
+   * 刷新访问令牌
+   * @param {function} callback - 回调函数
+   */
+  refreshAccessToken: function(callback) {
+    const api = require('./api.js');
+    const refreshToken = this.getRefreshToken();
+    
+    if (!refreshToken) {
+      callback && callback({ success: false, message: '刷新令牌不存在' });
+      return;
+    }
+    
+    api.refreshToken(refreshToken)
+      .then(response => {
+        if (response.code === 200) {
+          // 更新令牌信息
+          this.updateTokenInfo(response.data);
+          callback && callback({ success: true, data: response.data });
+        } else {
+          console.error('刷新令牌失败:', response.msg);
+          // 如果刷新失败，可能需要用户重新登录
+          callback && callback({ success: false, message: response.msg });
+        }
+      })
+      .catch(error => {
+        console.error('刷新令牌请求失败:', error);
+        callback && callback({ success: false, message: '网络错误' });
+      });
+  },
+
+  /**
+   * 自动检查并刷新令牌
+   * @returns {Promise} - 刷新结果
+   */
+  checkAndRefreshTokenIfNeeded: function() {
+    return new Promise((resolve, reject) => {
+      if (!this.shouldRefreshToken()) {
+        resolve({ success: true, refreshed: false, message: '令牌未过期' });
+        return;
+      }
+      
+      console.log('检测到令牌即将过期，自动刷新...');
+      this.refreshAccessToken((result) => {
+        if (result.success) {
+          console.log('令牌刷新成功');
+          resolve({ success: true, refreshed: true, data: result.data });
+        } else {
+          console.error('令牌刷新失败:', result.message);
+          // 刷新失败但用户可能还有有效令牌
+          if (this.isAccessTokenExpired()) {
+            // 令牌已完全过期，需要重新登录
+            this.clearAllUserData();
+            reject({ success: false, message: '令牌已过期，请重新登录', needLogin: true });
+          } else {
+            resolve({ success: true, refreshed: false, message: '刷新失败但令牌仍有效' });
+          }
+        }
+      });
+    });
+  },
+
+  /**
    * 验证数据完整性
    * @returns {object} 验证结果
    */
@@ -805,9 +928,24 @@ const AuthManager = {
     };
     
     try {
-      // 检查缓存是否过期
-      if (this.isCacheExpired()) {
-        result.warnings.push('用户缓存已过期');
+      // 检查令牌信息
+      const accessToken = this.getAccessToken();
+      const refreshToken = this.getRefreshToken();
+      const expireTime = this.getTokenExpireTime();
+      
+      if (!accessToken) {
+        result.errors.push('访问令牌缺失');
+        result.isValid = false;
+      }
+      
+      if (!refreshToken) {
+        result.warnings.push('刷新令牌缺失');
+      }
+      
+      if (!expireTime) {
+        result.warnings.push('令牌过期时间缺失');
+      } else if (this.isAccessTokenExpired()) {
+        result.warnings.push('访问令牌已过期或即将过期');
       }
       
       // 检查认证信息完整性
@@ -853,11 +991,19 @@ const AuthManager = {
       failed: []
     };
     
-    // 如果缓存过期，清除所有数据
-    if (validation.warnings.includes('用户缓存已过期')) {
-      this.clearAllUserData();
-      repairResult.repaired.push('已清除过期缓存数据');
-      return repairResult;
+    // 如果访问令牌已过期但刷新令牌存在，尝试刷新
+    if (validation.warnings.some(w => w.includes('访问令牌已过期'))) {
+      const refreshToken = this.getRefreshToken();
+      if (refreshToken) {
+        console.log('尝试自动刷新过期令牌...');
+        this.refreshAccessToken((result) => {
+          if (result.success) {
+            repairResult.repaired.push('已自动刷新访问令牌');
+          } else {
+            repairResult.failed.push('自动刷新令牌失败');
+          }
+        });
+      }
     }
     
     // 修复认证状态不一致

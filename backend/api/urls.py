@@ -1,6 +1,7 @@
 # backend/api/urls.py
 from django.urls import path
 from . import views
+from . import payment_views
 
 urlpatterns = [
     # 用户管理
@@ -10,6 +11,7 @@ urlpatterns = [
 
     #头像图片上传
     path('upload/image/', views.upload_image),
+
     # 基础认证功能
     path('login/', views.login, name='api_login'),
     path('user-info/', views.get_user_info, name='get_user_info'),
@@ -45,11 +47,12 @@ urlpatterns = [
     # 用户反馈功能
     path('feedback/', views.user_feedback, name='user_feedback'),
     path('feedback/<int:feedback_id>/', views.feedback_detail, name='feedback_detail'),
-
     path('simple_login/', views.simple_login),
-
     path('rider/settings/', views.rider_settings, name='rider_settings'),
     path('rider/auto-grab/', views.auto_grab_order, name='auto_grab_order'),
     path('rider/stats/', views.rider_grab_stats, name='rider_grab_stats'),
     path('order-categories/', views.order_categories, name='order_categories'),
+
+    # 支付相关
+    path('payment/notify/', payment_views.payment_notify, name='payment_notify'),
 ]
